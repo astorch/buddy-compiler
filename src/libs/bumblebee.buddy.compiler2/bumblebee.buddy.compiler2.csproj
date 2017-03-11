@@ -40,6 +40,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Xcite.Collections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Xcite.Collections.1.0.0\lib\net40\Xcite.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xcite.Csharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Xcite.Csharp.1.0.0\lib\net40\Xcite.Csharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="exceptions\BuddyCompilerException.cs" />
@@ -67,19 +75,11 @@
     <Compile Include="runtime\BuddyCompiler.cs" />
     <Compile Include="runtime\BuddyTextProcessor.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="model\Buddy.gr" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Motoi\projects\Xcite.Collections\Xcite.Collections.csproj">
-      <Project>{251e8ae0-6ded-4701-8767-88001d931374}</Project>
-      <Name>Xcite.Collections</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Motoi\projects\Xcite.Csharp\Xcite.Csharp.csproj">
-      <Project>{2c899abf-330f-4241-8986-2b2667173b8f}</Project>
-      <Name>Xcite.Csharp</Name>
-    </ProjectReference>
+    <EmbeddedResource Include="model\Buddy.gr" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
