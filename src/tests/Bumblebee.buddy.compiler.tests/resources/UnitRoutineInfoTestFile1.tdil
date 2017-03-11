@@ -1,0 +1,54 @@
+// Compiler generated file
+// Buddy Compiler version 0.1
+// Generated on 09.12.2016 15:45:41
+
+#alias "Combo:Mitarbeiter"
+#alias "TextBox:Passwort"
+#alias "Button:Anmelden"
+#alias "Button:Adressen"
+#alias "RibbonMenu:Datei"
+#alias "RibbonButton:Startseite"
+#alias "Button:Pruefmittel"
+#alias "Button:Plaketten"
+#alias "Button:Fuhrpark"
+#alias "Button:Dfue"
+
+Unit Verwaltung.s.Grundtest.Anmeldung_an_allen_Modulen
+
+Main:
+buero = "00092"
+piNr = "801"
+piPass = "Passw801"
+start(,, "{Verwaltung}")
+gosub Anmeldung_an_allen_Modulen:(buero, piNr, piPass)
+close(_Application,, Default)
+End
+
+Anmeldung_an_allen_Modulen:(buero, piNr, piPass)
+select(Combo:Mitarbeiter, Value, piNr)
+set(TextBox:Passwort, Text, piPass)
+click(Button:Anmelden, , Single)
+click(Button:Adressen, , Single)
+wait(RibbonMenu:Datei, IsVisible, True, 600)
+click(RibbonMenu:Datei, , Single)
+click(RibbonButton:Startseite, , Single)
+click(Button:Pruefmittel, , Single)
+wait(RibbonMenu:Datei, IsVisible, True, 600)
+click(RibbonMenu:Datei, , Single)
+click(RibbonButton:Startseite, , Single)
+click(Button:Plaketten, , Single)
+wait(RibbonMenu:Datei, IsVisible, True, 600)
+click(RibbonMenu:Datei, , Single)
+click(RibbonButton:Startseite, , Single)
+click(Button:Fuhrpark, , Single)
+wait(RibbonMenu:Datei, IsVisible, True, 600)
+click(RibbonMenu:Datei, , Single)
+click(RibbonButton:Startseite, , Single)
+click(Button:Dfue, , Single)
+wait(RibbonMenu:Datei, IsVisible, True, 600)
+click(RibbonMenu:Datei, , Single)
+click(RibbonButton:Startseite, , Single)
+End
+
+End
+

@@ -1,0 +1,18 @@
+﻿Anwendung: EGUB (*)
+
+Anwendungsfall: Anmeldung an EGUB
+
+Szenario: Erfolgreiche Anmeldung (piNr = "000", pass = "Passw001")
+benutzt Egub.s.Grundtest_neu.Anmeldung-neu
+benutzt Egub.s.Grundtest.Öffnen_und_Schließen
+
+Vorbedingung: -
+
+Schritte:
+Starte "C:\EGUB\EGUB.exe".
+Führe [Anmeldung] ($piNr, $pass) aus.
+Führe [Öffnen und Schließen] aus.
+Führe [Neustart aus dem Modul heraus] ("Adresse", "Mitarbeiter", $modul) aus.
+Warte bis Fenster <MainWindowEgub> sichtbar ist.
+Klicke den Button <MainWindowClose> einfach.
+Warte bis Anwendung geschlossen ist.

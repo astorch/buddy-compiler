@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7D92ECFF-B0F0-4317-93BA-FA760E8D583C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Bumblebee.buddy.compiler.tests</RootNamespace>
+    <AssemblyName>Bumblebee.buddy.compiler.tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="navajo.commons.lang">
+      <HintPath>..\..\..\..\..\simplex\Simplex\bin\Release\navajo.commons.lang.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Motoi\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Simplex">
+      <HintPath>..\..\..\..\..\simplex\Simplex\bin\Release\Simplex.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BuddyCompilerTests.cs" />
+    <Compile Include="collectiontools\StringExtensionMethodsTests.cs" />
+    <Compile Include="collectiontools\WordIteratorTests.cs" />
+    <Compile Include="InstructionFormatterTests.cs" />
+    <Compile Include="InstructionTranslatorTests.cs" />
+    <Compile Include="model\instructions\german\AssertInstructionTests.cs" />
+    <Compile Include="model\instructions\german\ClickInstructionTests.cs" />
+    <Compile Include="model\instructions\german\CloseInstructionTests.cs" />
+    <Compile Include="model\instructions\german\ExecuteInstructionTests.cs" />
+    <Compile Include="model\instructions\german\PressInstructionTests.cs" />
+    <Compile Include="model\instructions\german\SelectInstructionTests.cs" />
+    <Compile Include="model\instructions\german\SetInstructionTests.cs" />
+    <Compile Include="model\instructions\german\StartInstructionTests.cs" />
+    <Compile Include="model\instructions\german\WaitInstructionTests.cs" />
+    <Compile Include="model\instructions\_ErrorEvaluationResult.cs" />
+    <Compile Include="packaging\UnitBundlerTests.cs" />
+    <Compile Include="packaging\UnitRoutineInfoTests.cs" />
+    <Compile Include="packaging\UnitNameTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="simplex\BuddyTextProcessorTests.cs" />
+    <Compile Include="TestTool.cs" />
+    <Compile Include="writers\TdilFileWriterTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\libs\BumbleBee.Buddy.Compiler\Bumblebee.buddy.compiler.csproj">
+      <Project>{624b8c62-135b-446a-8c04-3952d68a00bd}</Project>
+      <Name>Bumblebee.buddy.compiler</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <EmbeddedResource Include="resources\BuddySimpleTestCase.btc" />
+    <EmbeddedResource Include="resources\BuddyStandardTestCase.btc" />
+    <EmbeddedResource Include="resources\BuddyFullFeaturedTestCase.btc" />
+    <EmbeddedResource Include="resources\BuddyFullFeaturedImportingTestCase.btc" />
+    <EmbeddedResource Include="resources\BuddyFullFeaturedVersionedTestCase.btc" />
+    <EmbeddedResource Include="resources\UnitRoutineInfoTestFile1.tdil" />
+    <EmbeddedResource Include="resources\UnitRoutineInfoTestFile2.tdil" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,17 @@
+﻿Anwendung: EGUB (9.507-*)
+
+Anwendungsfall: Anmeldung an EGUB
+
+Szenario: Erfolgreiche Anmeldung (piNr = "000", pass = "Passw001")
+
+Vorbedingung: -
+
+Schritte:
+Starte "C:\EGUB\EGUB.exe".
+Warte bis Fenster <WindowAnmeldung> sichtbar ist.
+Wähle in <ListboxPinr> den Wert $piNr aus.
+Setze in <TextboxPass> den Wert $pass ein.
+Klicke den Button <ButtonAnmelden> einfach.
+Warte bis Fenster <MainWindowEgub> sichtbar ist.
+Klicke den Button <MainWindowClose> einfach.
+Warte bis Anwendung geschlossen ist.

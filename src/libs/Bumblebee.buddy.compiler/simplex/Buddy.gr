@@ -1,0 +1,129 @@
+﻿// TERMINALS
+APP				= 'Anwendung';
+USECASE			= 'Anwendungsfall';
+SCENARIO		= 'Szenario';
+PRECOND			= 'Vorbedingung';
+STEPS			= 'Schritte';
+
+LBRACE			= '(';
+RBRACE			= ')';
+EQ				= '=';
+COLON			= ':';
+DOT				= '.';
+COMMA			= ',';
+DQUOTE			= '"';
+LAB				= '<';
+RAB				= '>';
+LSB				= '[';
+RSB				= ']';
+LCB				= '{';
+RCB				= '}';
+DOLLAR			= '$';
+AND				= '&';
+AT				= '@';
+CR				= '\r';
+NL				= '\n';
+WS				= ' ';
+BSL				= '\';
+SSL				= '/';
+DSL				= '//';
+UDRS			= '_';
+MINUS			= '-';
+PLUS			= '+';
+EMARK			= '!';
+QMARK			= '?';
+
+DIGIT_NATURAL		= '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+					 ;
+ZERO				= '0';
+
+CHAR_LOWER			= 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k'
+					 | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v'
+					 | 'w' | 'x' | 'y' | 'z' | 'ä' | 'ü' | 'ö' | 'ß'
+					 ;
+CHAR_UPPER			= 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K'
+					 | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V'
+					 | 'W' | 'X' | 'Y' | 'Z' | 'Ä' | 'Ü' | 'Ö' 
+					 ;
+
+// NON-TERMINALS
+linefeed			= CR NL;
+digit				= ZERO | DIGIT_NATURAL;
+char				= digit | CHAR_UPPER | CHAR_LOWER;
+char_special		= COMMA | COLON | DOT | EMARK | QMARK | AND | AT | BSL | SSL | UDRS | MINUS | PLUS | LBRACE | RBRACE | LCB | RCB | '§';
+char_extended		= char_special | char;
+
+// Next line is a workaround due to a bug (char)+ -> char (char)*
+word							= char (char)*;
+word_sequence					= word (WS word)*;
+//word_sequence_quoted			= DQUOTE (word_sequence)? DQUOTE;
+word_extended					= char_extended (char_extended)*;
+word_extended_sequence			= word_extended (WS word_extended)*;
+word_extended_sequence_quoted	= DQUOTE word_extended_sequence DQUOTE;
+
+scene_header_text				= word (WS | COMMA | '§' | MINUS | UDRS | word)*;
+comment_text					= word_extended (WS | DQUOTE | '§' | word_extended)*;
+
+empty_quotes					= DQUOTE DQUOTE;
+comment							= (WS)* DSL (WS)* comment_text linefeed;
+
+version_format					= '*' | DIGIT_NATURAL DOT (digit)+;
+// Next line is a workaround due to a bug (MINUS (WS)* version_format)? -> (version_ext)? - No implicit rule definition
+version_ext						= MINUS (WS)* version_format;
+version_def						= version_format (WS)* (version_ext)?;
+
+aliasRef			= LAB (char_extended)+ RAB;
+paramRef			= DOLLAR (char)+;
+
+// unit references
+paramSet_value		= paramRef | word_extended_sequence_quoted;
+// Next line is a workaround due to a bug (COMMA (WS)? paramSet_value)* -> (paramSet_value_con)*
+paramSet_value_con	= COMMA (WS)? paramSet_value;
+paramSet_value_seq	= LBRACE paramSet_value (paramSet_value_con)* RBRACE;
+unitRef_params		= (WS)? paramSet_value_seq;
+unitRef				= LSB word_sequence RSB (unitRef_params)?;
+
+// Key handling
+modifier			= 'STRG' | 'SHIFT' | 'ALT' | 'ALTGR';
+modified_key		= modifier ('+' modifier)* '+' char;
+unary_key			= 'Tab' | 'Enter' | 'Space' | 'Left' | 'Up' | 'Right' | 'Down';
+key_event			= unary_key | modified_key;
+
+text_fragment		= aliasRef | unitRef | paramRef | empty_quotes | word_extended_sequence_quoted | key_event | word;
+text_link			= (COMMA)? WS;
+text				= text_fragment (text_link text_fragment)*;
+step_core			= text DOT;
+step				= step_core (WS)* (comment)? (linefeed)*;
+step_decl			= STEPS COLON (WS)* linefeed;
+
+value_expr			= empty_quotes | word_extended_sequence_quoted;
+assignment			= word (WS)? EQ (WS)? value_expr;
+assignment_join		= COMMA (WS)* assignment;
+param_declr			= LBRACE (WS)* assignment (WS)* (assignment_join)* RBRACE;
+
+precond_descr		= PRECOND COLON (WS)* MINUS linefeed;
+
+// Imports
+hyphen				= UDRS | MINUS;
+unit_name_fragment	= word (hyphen word)*;
+unit_name			= unit_name_fragment DOT unit_name_fragment DOT unit_name_fragment DOT unit_name_fragment;
+import_statement	= 'benutzt' WS unit_name linefeed;
+imports				= import_statement (import_statement)*;
+
+// Scenario part
+scene_descr			= SCENARIO COLON (WS)* scene_header_text (param_declr)? linefeed;
+
+// Use case part
+usecase_descr		= USECASE COLON (WS)* word_extended_sequence linefeed;
+
+// Application part
+app_version			= LBRACE version_def RBRACE;
+app_title			= char (WS | DOT | AND | AT | UDRS | MINUS | char)*;
+app_descr			= APP COLON (WS)* app_title (WS)* (app_version)? (WS)* linefeed;
+
+// Text form
+short_descr			= step_decl (step)+;
+full_descr			= app_descr (linefeed)* usecase_descr (linefeed)* scene_descr (imports)? (linefeed)* precond_descr (linefeed)* short_descr;
+
+// Root
+file				= short_descr | full_descr;

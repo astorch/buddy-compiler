@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{624B8C62-135B-446A-8C04-3952D68A00BD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Bumblebee.buddy.compiler</RootNamespace>
+    <AssemblyName>Bumblebee.buddy.compiler</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\debug\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\debug\Bumblebee.buddy.compiler.XML</DocumentationFile>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Bumblebee.buddy.compiler.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Simplex">
+      <HintPath>..\..\..\..\..\simplex\Simplex\bin\Release\Simplex.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BuddyCompiler.cs" />
+    <Compile Include="collectiontools\StringExtensionMethods.cs" />
+    <Compile Include="CompilingContext.cs" />
+    <Compile Include="datastructures\SynMap.cs" />
+    <Compile Include="exceptions\UnitNameFormatException.cs" />
+    <Compile Include="exceptions\UnitBundlerException.cs" />
+    <Compile Include="IImportPathProvider.cs" />
+    <Compile Include="InstructionFormatter.cs" />
+    <Compile Include="exceptions\InvalidInstructionTranslationPatternException.cs" />
+    <Compile Include="InstructionTranslator.cs" />
+    <Compile Include="exceptions\BuddyCompilerBaseException.cs" />
+    <Compile Include="exceptions\BuddyCompilerException.cs" />
+    <Compile Include="exceptions\BuddyLanguageFormatException.cs" />
+    <Compile Include="exceptions\BuddyTextProcessorException.cs" />
+    <Compile Include="exceptions\InstructionFormattingException.cs" />
+    <Compile Include="exceptions\ExpressionEvaluationException.cs" />
+    <Compile Include="exceptions\ILocatableError.cs" />
+    <Compile Include="exceptions\TdilFileAlreadyFinalizedException.cs" />
+    <Compile Include="exceptions\TdilSectionAlreadyFinalizedException.cs" />
+    <Compile Include="exceptions\TdilUnitAlreadyFinalizedException.cs" />
+    <Compile Include="exceptions\UncompilableDirectiveException.cs" />
+    <Compile Include="exceptions\UnknownTranslationInstructionException.cs" />
+    <Compile Include="exceptions\UnkownPatternParameterTypeNameException.cs" />
+    <Compile Include="exceptions\ValueConversionException.cs" />
+    <Compile Include="lang\BuddyLangTokens.cs" />
+    <Compile Include="model\evaluation\EvaluationResult.cs" />
+    <Compile Include="model\evaluation\IInstructionEvaluationResult.cs" />
+    <Compile Include="model\InstructionEvaluator.cs" />
+    <Compile Include="model\IInstructionPatternToken.cs" />
+    <Compile Include="model\instructions\german\ExecuteBuddyTranslationInstruction.cs" />
+    <Compile Include="model\instructions\german\PressBuddyTranslationInstruction.cs" />
+    <Compile Include="model\InstructionTranslationInfo.cs" />
+    <Compile Include="model\instructions\AbstractBuddyTranslationInstruction.cs" />
+    <Compile Include="model\instructions\german\AssertBuddyTranslationInstruction.cs" />
+    <Compile Include="model\instructions\german\ClickBuddyTranslationInstruction.cs" />
+    <Compile Include="model\instructions\german\CloseBuddyTranslationInstruction.cs" />
+    <Compile Include="model\instructions\german\SelectBuddyTranslationInstruction.cs" />
+    <Compile Include="model\instructions\german\SetBuddyTranslationInstruction.cs" />
+    <Compile Include="model\instructions\german\StartBuddyTranslationInstruction.cs" />
+    <Compile Include="model\instructions\german\WaitBuddyTranslationInstruction.cs" />
+    <Compile Include="model\IBuddyTranslationInstruction.cs" />
+    <Compile Include="model\IParametrizedInstructionPatternToken.cs" />
+    <Compile Include="model\IPatternParameter.cs" />
+    <Compile Include="model\IPatternParameterValue.cs" />
+    <Compile Include="model\IReferableInstruction.cs" />
+    <Compile Include="model\IVariantInstruction.cs" />
+    <Compile Include="model\patternparameters\AbstractPatternParameter.cs" />
+    <Compile Include="model\patternparameters\adjustments\FormatParameterAdjustment.cs" />
+    <Compile Include="model\patternparameters\adjustments\IParameterAdjustment.cs" />
+    <Compile Include="model\patternparameters\adjustments\ParameterAdjustmentTable.cs" />
+    <Compile Include="model\functions\ITdilExtensionFunctionInvocationFormatter.cs" />
+    <Compile Include="model\functions\TdilExtensionFunctionArgumentInfo.cs" />
+    <Compile Include="model\functions\TdilExtensionFunctionInfo.cs" />
+    <Compile Include="model\functions\TdilExtensionFunctionRegistry.cs" />
+    <Compile Include="model\patternparameters\PatternParameter.cs" />
+    <Compile Include="model\patternparameters\PatternParameterFactory.cs" />
+    <Compile Include="model\patternparameters\types\AliasPatternParameter.cs" />
+    <Compile Include="model\patternparameters\types\AliasKeywordPatternParameter.cs" />
+    <Compile Include="model\patternparameters\types\FrequencePatternParameter.cs" />
+    <Compile Include="model\patternparameters\types\ConditionPatternParameter.cs" />
+    <Compile Include="model\patternparameters\types\KeyPatternParameter.cs" />
+    <Compile Include="model\patternparameters\types\KeywordPatternParameter.cs" />
+    <Compile Include="model\patternparameters\types\ParameterSetPatternParameter.cs" />
+    <Compile Include="model\patternparameters\types\ParamPatternParameter.cs" />
+    <Compile Include="model\patternparameters\types\StringPatternParameter.cs" />
+    <Compile Include="model\patternparameters\types\UnitReferencePatternParameter.cs" />
+    <Compile Include="model\patternparameters\values\AbstractPatternParameterValue.cs" />
+    <Compile Include="model\patternparameters\values\GenericPatternParameterValue.cs" />
+    <Compile Include="model\patternparameters\values\StringPatternParameterValue.cs" />
+    <Compile Include="model\tokens\ParameterToken.cs" />
+    <Compile Include="model\tokens\SpecialCharacterToken.cs" />
+    <Compile Include="model\tokens\WordToken.cs" />
+    <Compile Include="packaging\UnitBundleTable.cs" />
+    <Compile Include="packaging\UnitBundleTableEntry.cs" />
+    <Compile Include="packaging\UnitRoutineInfo.cs" />
+    <Compile Include="packaging\UnitName.cs" />
+    <Compile Include="packaging\UnitNameEncoder.cs" />
+    <Compile Include="packaging\UnitBundler.cs" />
+    <Compile Include="packaging\UnitVersionBounds.cs" />
+    <Compile Include="packaging\UnitVersionEncoder.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="simplex\BuddyTextInfo.cs" />
+    <Compile Include="simplex\BuddyTextParameter.cs" />
+    <Compile Include="simplex\BuddyTextProcessor.cs" />
+    <Compile Include="SynMapRegistry.cs" />
+    <Compile Include="collectiontools\WordIterator.cs" />
+    <Compile Include="writers\AbstractTdilWriter.cs" />
+    <Compile Include="writers\TdilFileWriter.cs" />
+    <Compile Include="writers\TdilSectionWriter.cs" />
+    <Compile Include="writers\TdilUnitWriter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Motoi\projects\Xcite.Collections\Xcite.Collections.csproj">
+      <Project>{251e8ae0-6ded-4701-8767-88001d931374}</Project>
+      <Name>Xcite.Collections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Motoi\projects\Xcite.Csharp\Xcite.Csharp.csproj">
+      <Project>{2c899abf-330f-4241-8986-2b2667173b8f}</Project>
+      <Name>Xcite.Csharp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="simplex\Buddy.gr" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

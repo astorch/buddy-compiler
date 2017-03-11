@@ -1,0 +1,189 @@
+﻿// Terminals
+WS					= ' ';
+CR					= '\r';
+NL					= '\n';
+
+LBRACE				= '(';
+RBRACE				= ')';
+LAB					= '<';
+RAB					= '>';
+LSB					= '[';
+RSB					= ']';
+UDRS				= '_';
+MINUS				= '-';
+PLUS				= '+';
+STAR				= '*';
+COMMA				= ',';
+COLON				= ':';
+DOT					= '.';
+EMARK				= '!';
+QMARK				= '?';
+HASH				= '#';
+EQ					= '=';
+BSL					= '\';
+FSL					= '/';
+
+DQUOTE				= '"';
+
+PGR					= '§';
+DLR					= '$';
+AND					= '&';
+AT					= '@';
+
+DIGIT_NATURAL		= '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+					;
+ZERO				= '0'
+					;
+CHAR_LOWER			= 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k'
+					| 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v'
+					| 'w' | 'x' | 'y' | 'z' | 'ä' | 'ü' | 'ö' | 'ß'
+					;
+CHAR_UPPER			= 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K'
+					| 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V'
+					| 'W' | 'X' | 'Y' | 'Z' | 'Ä' | 'Ü' | 'Ö' 
+					;
+
+// Base rules
+linefeed			= CR NL
+					;
+digit				= ZERO | DIGIT_NATURAL
+					;
+letter				= CHAR_UPPER | CHAR_LOWER
+					;
+name_letter_link	= MINUS | UDRS
+					;
+name				= letter (name_letter_link | letter)*
+					;
+word_letter_link	= MINUS letter
+					;
+word				= letter (word_letter_link | letter)*
+					;
+word_successor		= WS | COMMA
+					;
+word_link			= word_successor word
+					;
+word_seq			= word (word_link)*
+					;
+char				= digit | letter
+					;
+
+// string
+string_char				= LBRACE | RBRACE | LAB | RAB | LSB | RSB | UDRS | MINUS | PLUS | STAR | COLON | COMMA | DOT | HASH 
+						| EMARK | QMARK | HASH 
+						| EQ | BSL | FSL | PGR | DLR | AND | AT
+						| WS 
+						| char
+						;
+string_char_seq			= string_char (string_char)*
+						;
+string_content			= DQUOTE string_char_seq DQUOTE
+						;
+string_empty			= DQUOTE DQUOTE
+						;
+string					= string_empty | string_content
+						;
+
+// Scenario parameter
+parameter_name			= letter (letter)*
+						;
+parameter_assign		= parameter_name (WS)? EQ (WS)? string
+						;
+parameter_assign_link	= COMMA (WS)? parameter_assign
+						;
+parameter_assign_seq	= parameter_assign (WS)? (parameter_assign_link)*
+						;
+
+// Alias name
+alias_name_fragment		= letter (UDRS | AT | char)*
+						;
+alias_name				= alias_name_fragment COLON alias_name_fragment
+						;
+
+// Preliminary scenario tokens
+scenario_name_letter		= PGR | COMMA | MINUS | UDRS | HASH | DOT | char
+							;
+scenario_name				= scenario_name_letter (WS | scenario_name_letter)*
+							;
+
+// Referencing words
+reference_parameter					= DLR parameter_name
+									;
+reference_alias						= LAB alias_name RAB
+									;
+reference_string					= string
+									;
+reference_string_seq_link			= COMMA WS reference_string
+									;
+reference_string_seq				= reference_string (reference_string_seq_link)*
+									;
+reference_subselect					= 'unter' WS reference_string_seq
+									;
+reference_unit						= LSB scenario_name RSB
+									;
+reference_unit_parameter_assign_sel	= reference_parameter | string
+									;
+reference_unit_parameter_assign		= parameter_name (WS)? EQ (WS)? reference_unit_parameter_assign_sel
+									;
+reference_unit_parameter_seq_link	= COMMA WS reference_unit_parameter_assign
+									;
+reference_unit_parameter_seq		= reference_unit_parameter_assign (reference_unit_parameter_seq_link)*
+									;
+reference_unit_parameters			= 'mit' WS reference_unit_parameter_seq
+									;
+
+// steps
+directive_word				= reference_parameter | reference_alias | reference_unit 
+							| reference_subselect | reference_unit_parameters
+							| reference_string | word
+							;
+directive_word_successor	= WS directive_word
+							;
+directive_word_seq			= directive_word (directive_word_successor)*
+							;
+directive					= directive_word_seq DOT
+							;
+directive_link				= linefeed directive
+							;
+directive_seq				= directive (directive_link)*
+							;
+steps						= 'Schritte:' linefeed directive_seq
+							;
+
+// Imports
+import_name_fragment		= letter (UDRS | MINUS | letter)*
+							;
+import_name					= import_name_fragment DOT import_name_fragment DOT import_name_fragment DOT import_name_fragment
+							;
+import_statement			= 'benutzt' WS import_name linefeed
+							;
+imports						= import_statement (import_statement)*
+							;
+
+// Scenario
+scenario_parameter_seq		= LBRACE parameter_assign_seq RBRACE
+							;
+scenario					= 'Szenario:' WS scenario_name (scenario_parameter_seq)? linefeed
+							;
+
+// Use case
+usecase = 'Anwendungsfall:' WS word_seq linefeed;
+
+// application
+version_fragment	= DIGIT_NATURAL DOT (digit)+
+					;
+version_single		= STAR | version_fragment
+					;
+version_link		= MINUS version_single
+					;
+version_range		= version_single (version_link)?
+					;
+version				= LBRACE version_range RBRACE
+					;
+version_intro		= WS version
+					;
+application			= 'Anwendung:' WS name (version_intro)? linefeed
+					;
+
+// Root
+testcase = application usecase scenario (imports)? steps
+		 ;

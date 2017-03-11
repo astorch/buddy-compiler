@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{464F5B88-D259-4116-8E0D-5B5E62262654}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>bumblebee.buddy.compiler2</RootNamespace>
+    <AssemblyName>bumblebee.buddy.compiler2</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Simplex">
+      <HintPath>..\..\..\..\..\simplex\Simplex\bin\Release\Simplex.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="exceptions\BuddyCompilerException.cs" />
+    <Compile Include="exceptions\EBuddyCompileError.cs" />
+    <Compile Include="model\AbstractReference.cs" />
+    <Compile Include="model\AliasReference.cs" />
+    <Compile Include="model\ApplicationContext.cs" />
+    <Compile Include="model\BuddyModelFactory.cs" />
+    <Compile Include="model\DirectiveContext.cs" />
+    <Compile Include="model\Import.cs" />
+    <Compile Include="model\ParameterReference.cs" />
+    <Compile Include="model\ScenarioContext.cs" />
+    <Compile Include="model\ScenarioParameter.cs" />
+    <Compile Include="model\StepsContext.cs" />
+    <Compile Include="model\StringReference.cs" />
+    <Compile Include="model\SubselectReference.cs" />
+    <Compile Include="model\TestcaseContext.cs" />
+    <Compile Include="model\UnitInvocationParameter.cs" />
+    <Compile Include="model\UnitInvocationParameterReference.cs" />
+    <Compile Include="model\UnitInvocationReference.cs" />
+    <Compile Include="model\UsecaseContext.cs" />
+    <Compile Include="model\Version.cs" />
+    <Compile Include="model\WordReference.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="runtime\BuddyCompiler.cs" />
+    <Compile Include="runtime\BuddyTextProcessor.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="model\Buddy.gr" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Motoi\projects\Xcite.Collections\Xcite.Collections.csproj">
+      <Project>{251e8ae0-6ded-4701-8767-88001d931374}</Project>
+      <Name>Xcite.Collections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Motoi\projects\Xcite.Csharp\Xcite.Csharp.csproj">
+      <Project>{2c899abf-330f-4241-8986-2b2667173b8f}</Project>
+      <Name>Xcite.Csharp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
