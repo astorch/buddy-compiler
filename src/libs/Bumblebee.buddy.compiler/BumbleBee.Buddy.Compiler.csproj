@@ -46,7 +46,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Xcite.Collections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xcite.Collections.1.0.0\lib\net40\Xcite.Collections.dll</HintPath>
+      <HintPath>..\..\packages\Xcite.Collections.2.0.0\lib\net40\Xcite.Collections.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Xcite.Csharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

@@ -130,7 +130,7 @@ namespace Bumblebee.buddy.compiler {
                         using (TdilUnitWriter tdilUnitWriter = tdilFileWriter.CreateUnit(qualifiedUnitName)) {
                             string executeSectionName = string.Format("{0}", unitName.GetEncodedScenarioName());
                             BuddyTextParameter[] unitParameters = buddyTextInfo.Parameters;
-                            string[] parameterNames = EnumerableMethodExtensions.ToArray(unitParameters.Select(p => p.Name));
+                            string[] parameterNames = EnumerableExtensions.ToArray(unitParameters.Select(p => p.Name));
 
                             // Write main section
                             using (TdilSectionWriter tdilSectionWriter = tdilUnitWriter.CreateSection("Main")) {
