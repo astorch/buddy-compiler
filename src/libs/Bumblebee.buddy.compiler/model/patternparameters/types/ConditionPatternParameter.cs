@@ -29,6 +29,9 @@ namespace Bumblebee.buddy.compiler.model.patternparameters.types {
 
             if (runtimeExpression == "auswählbar" || runtimeExpression == "klickbar") 
                 return new GenericPatternParameterValue("IsEnabled", "True");
+
+            if (runtimeExpression == "deaktiviert")
+                return new GenericPatternParameterValue("IsEnabled", "False");
             
             return ThrowValueConversionException(runtimeExpression);
         }
