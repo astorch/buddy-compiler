@@ -29,6 +29,7 @@ PGR					= '§';
 DLR					= '$';
 AND					= '&';
 AT					= '@';
+EUR					= '@';
 
 DIGIT_NATURAL		= '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 					;
@@ -70,7 +71,7 @@ char				= digit | letter
 // string
 string_char				= LBRACE | RBRACE | LAB | RAB | LSB | RSB | UDRS | MINUS | PLUS | STAR | COLON | COMMA | DOT | HASH 
 						| EMARK | QMARK | HASH 
-						| EQ | BSL | FSL | PGR | DLR | AND | AT
+						| EQ | BSL | FSL | PGR | DLR | AND | AT | EUR
 						| WS 
 						| char
 						;
