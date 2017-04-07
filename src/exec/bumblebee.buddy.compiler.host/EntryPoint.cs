@@ -21,6 +21,9 @@ namespace bumblebee.buddy.compiler.host {
             ILog logWriter = LogManager.GetLogger("BLC");
             logWriter.InfoFormat("LogWriter initialized");
 
+            if (execArgs.Debug)
+                System.Diagnostics.Debugger.Launch();
+
             FileInfo sourceFile = execArgs.SourceFile;
             FileInfo targetFile = execArgs.TargetFile;
 

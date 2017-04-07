@@ -2,7 +2,7 @@
 using CommandLine;
 using CommandLine.Text;
 
-[assembly: AssemblyUsage("Usage: blc.exe -s testcase-src.txt -t testcase-tgt.tdil.txt")]
+[assembly: AssemblyUsage("Usage: blc.exe -s testcase.txt -t testcase.txt.tdil")]
 
 namespace bumblebee.buddy.compiler.host {
     /// <summary>
@@ -27,6 +27,12 @@ namespace bumblebee.buddy.compiler.host {
             get { return TargetFile == null ? null : TargetFile.ToString(); }
             set { TargetFile = new FileInfo(value); }
         }
+
+        /// <summary>
+        /// Returns TRUE if the application shall run in debug mode.
+        /// </summary>
+        [Option('d', "debug")]
+        public bool Debug { get; set; }
 
         /// <summary>
         /// Returns a pointer to the source file that shall be compiled.
