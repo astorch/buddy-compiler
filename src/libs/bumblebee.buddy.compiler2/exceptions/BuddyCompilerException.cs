@@ -5,7 +5,7 @@ namespace bumblebee.buddy.compiler2.exceptions {
     /// Indicates an error during the buddy compilation process.
     /// </summary>
     [Serializable]
-    public class BuddyCompilerException : Xcite.Csharp.exceptions.Xception<EBuddyCompileError> {
+    public class BuddyCompilerException : xcite.csharp.exceptions.Xception<EBuddyCompileError> {
         /// <inheritdoc />
         public BuddyCompilerException(EBuddyCompileError errorReason) : base(errorReason) {
             // Nothing to do here

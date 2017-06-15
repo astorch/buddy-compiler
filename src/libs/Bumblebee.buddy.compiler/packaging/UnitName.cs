@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using Bumblebee.buddy.compiler.exceptions;
-using Xcite.Csharp.assertions;
-using Xcite.Csharp.lang;
+using xcite.csharp;
+using xcite.csharp.assertions;
 
 namespace Bumblebee.buddy.compiler.packaging {
     /// <summary>

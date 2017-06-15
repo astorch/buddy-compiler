@@ -3,7 +3,7 @@ using Bumblebee.buddy.compiler.collectiontools;
 using Bumblebee.buddy.compiler.exceptions;
 using Bumblebee.buddy.compiler.model.patternparameters;
 using Bumblebee.buddy.compiler.model.tokens;
-using Xcite.Collections;
+using xcite.collections;
 
 namespace Bumblebee.buddy.compiler.model {
     /// <summary>

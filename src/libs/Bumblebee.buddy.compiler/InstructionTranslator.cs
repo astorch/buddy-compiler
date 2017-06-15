@@ -6,7 +6,7 @@ using Bumblebee.buddy.compiler.model;
 using Bumblebee.buddy.compiler.model.evaluation;
 using Bumblebee.buddy.compiler.model.instructions.german;
 using Bumblebee.buddy.compiler.model.patternparameters.adjustments;
-using Xcite.Csharp.assertions;
+using xcite.csharp.assertions;
 
 namespace Bumblebee.buddy.compiler {
     /// <summary>

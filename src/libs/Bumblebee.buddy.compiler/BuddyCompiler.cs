@@ -7,8 +7,8 @@ using Bumblebee.buddy.compiler.model.functions;
 using Bumblebee.buddy.compiler.packaging;
 using Bumblebee.buddy.compiler.simplex;
 using Bumblebee.buddy.compiler.writers;
-using Xcite.Collections;
-using Xcite.Csharp.lang;
+using xcite.collections;
+using xcite.csharp.diagnostics;
 
 namespace Bumblebee.buddy.compiler {
     /// <summary>
@@ -130,7 +130,7 @@ namespace Bumblebee.buddy.compiler {
                         using (TdilUnitWriter tdilUnitWriter = tdilFileWriter.CreateUnit(qualifiedUnitName)) {
                             string executeSectionName = string.Format("{0}", unitName.GetEncodedScenarioName());
                             BuddyTextParameter[] unitParameters = buddyTextInfo.Parameters;
-                            string[] parameterNames = EnumerableExtensions.ToArray(unitParameters.Select(p => p.Name));
+                            string[] parameterNames = EnumerableExtensionMethods.ToArray(unitParameters.Select(p => p.Name));
 
                             // Write main section
                             using (TdilSectionWriter tdilSectionWriter = tdilUnitWriter.CreateSection("Main")) {

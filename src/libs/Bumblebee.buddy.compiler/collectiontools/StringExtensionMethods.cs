@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Bumblebee.buddy.compiler.lang;
-using Xcite.Collections;
+using xcite.collections;
 
 namespace Bumblebee.buddy.compiler.collectiontools {
     /// <summary>

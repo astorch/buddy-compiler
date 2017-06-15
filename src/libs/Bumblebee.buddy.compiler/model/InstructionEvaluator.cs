@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using Bumblebee.buddy.compiler.collectiontools;
 using Bumblebee.buddy.compiler.model.evaluation;
 using Bumblebee.buddy.compiler.model.patternparameters;
-using Xcite.Collections;
+using xcite.collections;
 
 namespace Bumblebee.buddy.compiler.model {
     /// <summary>

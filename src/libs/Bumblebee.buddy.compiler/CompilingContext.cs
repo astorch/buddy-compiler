@@ -1,5 +1,5 @@
 ﻿using System;
-using Xcite.Collections;
+using xcite.collections;
 
 namespace Bumblebee.buddy.compiler {
     /// <summary>
