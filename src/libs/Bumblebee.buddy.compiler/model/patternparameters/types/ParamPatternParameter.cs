@@ -16,6 +16,8 @@ namespace Bumblebee.buddy.compiler.model.patternparameters.types {
         /// <inheritdoc />
         protected override IPatternParameterValue OnConvertValue(string runtimeExpression) {
             string expression = runtimeExpression;
+            if (expression[0] != '$' && expression[0] != '"') ThrowValueConversionException(runtimeExpression);
+
             if (expression[0] == '$')
                 expression = expression.Substring(1);
 

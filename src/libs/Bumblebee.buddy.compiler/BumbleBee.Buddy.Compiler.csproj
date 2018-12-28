@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Bumblebee.buddy.compiler</RootNamespace>
     <AssemblyName>Bumblebee.buddy.compiler</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -37,9 +37,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Simplex, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\bitbucket\simplex\Simplex\bin\Release\Simplex.dll</HintPath>
+    <Reference Include="Simplex, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Simplex.1.0.0\lib\netstandard2.0\Simplex.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,11 +47,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xcite.collections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\xcite.collections.3.0.3\lib\net462\xcite.collections.dll</HintPath>
+    <Reference Include="xcite.collections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\xcite.collections.9.0.0\lib\netstandard2.0\xcite.collections.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="xcite.csharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\xcite.csharp.3.0.4\lib\net462\xcite.csharp.dll</HintPath>
+    <Reference Include="xcite.csharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\xcite.csharp.7.0.2\lib\netstandard2.0\xcite.csharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

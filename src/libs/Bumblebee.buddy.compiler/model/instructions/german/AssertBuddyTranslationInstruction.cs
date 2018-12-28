@@ -14,7 +14,7 @@
         /// Returns the pattern description of the action step.
         /// </summary>
         public override string InstructionPattern {
-            get { return "Prüfe <{name:alias,type:alias}> {name:value,type:string,mandatory:false} {name:condition,type:condition}"; }
+            get { return "Prüfe <{name:alias,type:alias}> {name:value,type:param,mandatory:false} {name:condition,type:condition}"; }
         }
 
         /// <summary>

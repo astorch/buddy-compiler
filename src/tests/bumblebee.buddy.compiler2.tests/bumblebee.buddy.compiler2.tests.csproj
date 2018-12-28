@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>bumblebee.buddy.compiler2.tests</RootNamespace>
     <AssemblyName>bumblebee.buddy.compiler2.tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -33,8 +33,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.7.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
+      <HintPath>..\..\packages\NUnit.2.7.0\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -51,13 +51,13 @@
     <Compile Include="runtime\BuddyTextProcessorTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\libs\bumblebee.buddy.compiler2\bumblebee.buddy.compiler2.csproj">
       <Project>{464f5b88-d259-4116-8e0d-5b5e62262654}</Project>
       <Name>bumblebee.buddy.compiler2</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
