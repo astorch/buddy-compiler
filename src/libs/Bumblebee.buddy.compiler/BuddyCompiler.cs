@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using Bumblebee.buddy.compiler.collectiontools;
 using Bumblebee.buddy.compiler.exceptions;
 using Bumblebee.buddy.compiler.model.functions;
 using Bumblebee.buddy.compiler.packaging;
 using Bumblebee.buddy.compiler.simplex;
 using Bumblebee.buddy.compiler.writers;
-using xcite.collections;
 using xcite.csharp.diagnostics;
 
 namespace Bumblebee.buddy.compiler {
@@ -15,9 +13,9 @@ namespace Bumblebee.buddy.compiler {
     /// Implements a compiler for the buddy language.
     /// </summary>
     public class BuddyCompiler {
-        private readonly BuddyTextProcessor iBuddyTextProcessor;
-        private readonly InstructionTranslator iInstructionTranslator;
-        private IImportPathProvider iImportPathProvider;
+        private readonly BuddyTextProcessor _buddyTextProcessor;
+        private readonly InstructionTranslator _instructionTranslator;
+        private IImportPathProvider _importPathProvider;
 
         /// <summary>
         /// Creates a new instance.
@@ -25,9 +23,9 @@ namespace Bumblebee.buddy.compiler {
         /// <exception cref="BuddyCompilerException"/>
         public BuddyCompiler() {
             try {
-                iBuddyTextProcessor = new BuddyTextProcessor();
-                iInstructionTranslator = new InstructionTranslator();
-                iImportPathProvider = NullImportPathProvider.Instance;
+                _buddyTextProcessor = new BuddyTextProcessor();
+                _instructionTranslator = new InstructionTranslator();
+                _importPathProvider = NullImportPathProvider.Instance;
             } catch (Exception ex) {
                 throw new BuddyCompilerException("Error on initializing Buddy Compiler", ex);
             }
@@ -37,8 +35,8 @@ namespace Bumblebee.buddy.compiler {
         /// Returns the currently used import path provider or does set.
         /// </summary>
         public IImportPathProvider ImportPathProvider {
-            get { return iImportPathProvider; }
-            set { iImportPathProvider = value ?? NullImportPathProvider.Instance; }
+            get { return _importPathProvider; }
+            set { _importPathProvider = value ?? NullImportPathProvider.Instance; }
         }
 
         /// <summary>
@@ -74,7 +72,7 @@ namespace Bumblebee.buddy.compiler {
 
                 // Process text
                 StopwatchLog textProcessorStopwatch = StopwatchLog.StartNew(LogBuddyTextProcessorPerformance);
-                BuddyTextInfo buddyTextInfo = iBuddyTextProcessor.ProcessText(buddyText);
+                BuddyTextInfo buddyTextInfo = _buddyTextProcessor.ProcessText(buddyText);
                 textProcessorStopwatch.Dispose(buddyTextInfo);
 
                 // In the case of an short form, create standard names
@@ -107,13 +105,15 @@ namespace Bumblebee.buddy.compiler {
                         
                 using (CompilingContext compilingContext = new CompilingContext()) {
                     // Compile directives
-                    LinearList<string> directiveSet = new LinearList<string>();
+                    string[] directiveSet = new string[1000];
+                    int pr = 0;
                     using (StopwatchLog.StartNew(LogInstructionTranslationPerformance)) {
                         for (int i = -1; ++i != normalizedBuddyTextSteps.Length;) {
                             string actionLine = normalizedBuddyTextSteps[i];
-                            string directive = iInstructionTranslator.ToDirective(actionLine);
-                            directiveSet.Add(directive);
+                            string directive = _instructionTranslator.ToDirective(actionLine);
+                            directiveSet[pr++] = directive;
                         }
+                        Array.Resize(ref directiveSet, pr);
                     }
 
                     // Add alias references
@@ -130,7 +130,9 @@ namespace Bumblebee.buddy.compiler {
                         using (TdilUnitWriter tdilUnitWriter = tdilFileWriter.CreateUnit(qualifiedUnitName)) {
                             string executeSectionName = string.Format("{0}", unitName.GetEncodedScenarioName());
                             BuddyTextParameter[] unitParameters = buddyTextInfo.Parameters;
-                            string[] parameterNames = EnumerableExtensions.ToArray(unitParameters.Select(p => p.Name));
+                            string[] parameterNames = new string[unitParameters.Length];
+                            for (int l = -1; ++l != parameterNames.Length;)
+                                parameterNames[l] = unitParameters[l].Name;
 
                             // Write main section
                             using (TdilSectionWriter tdilSectionWriter = tdilUnitWriter.CreateSection("Main")) {
@@ -162,7 +164,8 @@ namespace Bumblebee.buddy.compiler {
 
                             // Write execute section
                             using (TdilSectionWriter tdilSectionWriter = tdilUnitWriter.CreateSection(executeSectionName, parameterNames)) {
-                                directiveSet.ForEach(directive => tdilSectionWriter.AppendLine(directive));
+                                for (int l = -1; ++l != directiveSet.Length;)
+                                    tdilSectionWriter.AppendLine(directiveSet[l]);
                             }
                         }
                     }
@@ -274,7 +277,8 @@ namespace Bumblebee.buddy.compiler {
 
                 // Check if the word is an article
                 string wordText = word.Text;
-                bool isArticle = articles.Any(item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase));
+                bool isArticle = Array.FindIndex(articles,
+                                     item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase)) != -1;
                 if (!isArticle) continue;
                 word.Remove();
 
@@ -301,7 +305,8 @@ namespace Bumblebee.buddy.compiler {
 
                 // Check if the word is an preposition
                 string wordText = word.Text;
-                bool isPreposition = prepositions.Any(item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase));
+                bool isPreposition = Array.FindIndex(prepositions,
+                                         item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase)) != -1; 
                 if (!isPreposition) continue;
                 word.Remove();
 
@@ -328,7 +333,8 @@ namespace Bumblebee.buddy.compiler {
 
                 // Check if the word is an preposition
                 string wordText = word.Text;
-                bool isAuxiliaryVerb = auxiliaryVerbs.Any(item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase));
+                bool isAuxiliaryVerb = Array.FindIndex(auxiliaryVerbs,
+                                           item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase)) != -1; 
                 if (!isAuxiliaryVerb) continue;
                 word.Remove();
 
@@ -355,7 +361,8 @@ namespace Bumblebee.buddy.compiler {
 
                 // Check if the word is an preposition
                 string wordText = word.Text;
-                bool isAuxiliaryVerb = substantives.Any(item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase));
+                bool isAuxiliaryVerb = Array.FindIndex(substantives,
+                                           item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase)) != -1;
                 if (!isAuxiliaryVerb) continue;
                 word.Remove();
 
@@ -472,7 +479,7 @@ namespace Bumblebee.buddy.compiler {
                 buddyText = string.Empty;
 
             string[] lines = buddyText.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            int indexOfFirstDirective = lines.IndexOf("Schritte:");
+            int indexOfFirstDirective = Array.IndexOf(lines, "Schritte:");
             int errorLineIndex = indexOfFirstDirective + actualCount + 4; // TODO Handle sentences without linefeed!
 
             throw new UncompilableDirectiveException("Could not compile directive") {
