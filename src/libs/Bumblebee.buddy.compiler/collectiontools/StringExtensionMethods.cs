@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Bumblebee.buddy.compiler.lang;
-using xcite.collections;
 
 namespace Bumblebee.buddy.compiler.collectiontools {
     /// <summary>
@@ -78,8 +77,8 @@ namespace Bumblebee.buddy.compiler.collectiontools {
         /// <param name="value">String to split</param>
         /// <returns>Buddy relevant tokens</returns>
         public static string[] SplitToBuddyTokens(this string value) {
-            StringBuilder stringBuilder = new StringBuilder(50);
-            LinearList<string> buddyTokens = new LinearList<string>();
+            StringBuilder stringBuilder = new StringBuilder(1024);
+            List<string> buddyTokens = new List<string>(1024);
             char[] charArray = value.ToCharArray();
 
             bool escapeMode = false;
@@ -150,7 +149,7 @@ namespace Bumblebee.buddy.compiler.collectiontools {
         /// <param name="wordSequence">Array of words to process</param>
         /// <returns>Extended array of words</returns>
         public static string[] StripSpecialCharacters(this string[] wordSequence) {
-            LinearList<string> resultSet = new LinearList<string>();
+            List<string> resultSet = new List<string>(1024);
             for (int i = -1; ++i != wordSequence.Length;) {
                 string word = wordSequence[i];
                 char head = word[0];

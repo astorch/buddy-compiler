@@ -1,16 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using xcite.collections;
 using xcite.csharp.assertions;
 
 namespace Bumblebee.buddy.compiler.packaging {
-    /// <summary>
-    /// Describes a routine of a unit.
-    /// </summary>
+    /// <summary> Describes a routine of a unit. </summary>
     public class UnitRoutineInfo {
-        /// <summary>
-        /// Creates a new instance with the given values.
-        /// </summary>
+        /// <summary> Creates a new instance with the given values. </summary>
         /// <param name="name">Name of the unit method</param>
         /// <param name="arguments">Unit method parameters</param>
         public UnitRoutineInfo(string name, UnitRoutineArgumentInfo[] arguments) {
@@ -18,15 +14,11 @@ namespace Bumblebee.buddy.compiler.packaging {
             Arguments = arguments;
         }
 
-        /// <summary>
-        /// Returns the name of the routine.
-        /// </summary>
-        public string Name { get; private set; }
+        /// <summary> Returns the name of the routine. </summary>
+        public string Name { get; }
 
-        /// <summary>
-        /// Returns the arguments of the routine. 
-        /// </summary>
-        public UnitRoutineArgumentInfo[] Arguments { get; private set; }
+        /// <summary> Returns the arguments of the routine.  </summary>
+        public UnitRoutineArgumentInfo[] Arguments { get; }
 
         /// <summary>
         /// Returns a set of <see cref="UnitRoutineInfo"/> for each found routine within the given 
@@ -38,7 +30,7 @@ namespace Bumblebee.buddy.compiler.packaging {
         public static UnitRoutineInfo[] ParseFromFile(string fileContent) {
             Assert.NotNullOrEmpty(() => fileContent);
 
-            LinearList<UnitRoutineInfo> methodInfoSet = new LinearList<UnitRoutineInfo>();
+            List<UnitRoutineInfo> methodInfoSet = new List<UnitRoutineInfo>(100);
             MatchCollection matchCollection = Regex.Matches(fileContent, "^(?<name>\\w+):(\\((?<args>[^\\)]+)\\))?", RegexOptions.Multiline);
             for (int i = -1; ++i != matchCollection.Count;) {
                 Match match = matchCollection[i];
@@ -62,15 +54,17 @@ namespace Bumblebee.buddy.compiler.packaging {
             if (string.IsNullOrEmpty(argumentLine)) return new UnitRoutineArgumentInfo[0];
 
             string[] parts = argumentLine.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-            UnitRoutineArgumentInfo[] arguments = parts.Index().Select((i, str) => new UnitRoutineArgumentInfo(i, str.Trim())).ToArray();
+            UnitRoutineArgumentInfo[] arguments = new UnitRoutineArgumentInfo[parts.Length];
+            for (int i = -1; ++i != arguments.Length;) {
+                string str = parts[i];
+                arguments[i] = new UnitRoutineArgumentInfo(i, str.Trim());
+            }
 
             return arguments;
         }
     }
 
-    /// <summary>
-    /// Describes a parameter of a unit routine.
-    /// </summary>
+    /// <summary> Describes a parameter of a unit routine. </summary>
     public class UnitRoutineArgumentInfo {
         /// <summary>
         /// Creates a new instance with the given values.
@@ -82,14 +76,10 @@ namespace Bumblebee.buddy.compiler.packaging {
             Index = index;
         }
 
-        /// <summary>
-        /// Returns the name of the parameter.
-        /// </summary>
-        public string Name { get; private set; }
+        /// <summary> Returns the name of the parameter. </summary>
+        public string Name { get; }
 
-        /// <summary>
-        /// Returns the index of the parameter.
-        /// </summary>
-        public int Index { get; private set; }
+        /// <summary> Returns the index of the parameter. </summary>
+        public int Index { get; }
     }
 }

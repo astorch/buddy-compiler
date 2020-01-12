@@ -47,10 +47,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xcite.collections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\xcite.collections.9.0.0\lib\netstandard2.0\xcite.collections.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="xcite.csharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\packages\xcite.csharp.7.0.2\lib\netstandard2.0\xcite.csharp.dll</HintPath>
       <Private>True</Private>
@@ -59,6 +55,7 @@
   <ItemGroup>
     <Compile Include="BuddyCompiler.cs" />
     <Compile Include="collectiontools\StringExtensionMethods.cs" />
+    <Compile Include="CollectionX10.cs" />
     <Compile Include="CompilingContext.cs" />
     <Compile Include="datastructures\SynMap.cs" />
     <Compile Include="exceptions\UnitNameFormatException.cs" />

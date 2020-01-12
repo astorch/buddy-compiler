@@ -1,5 +1,5 @@
 ﻿using System;
-using xcite.collections;
+using System.Collections.Generic;
 
 namespace Bumblebee.buddy.compiler {
     /// <summary>
@@ -13,8 +13,8 @@ namespace Bumblebee.buddy.compiler {
         /// </summary>
         public static CompilingContext Current { get; private set; }
 
-        private readonly LinearList<string> iAliasReferenceSet = new LinearList<string>();
-        private readonly LinearList<string> iUnitReferenceSet = new LinearList<string>();
+        private readonly List<string> iAliasReferenceSet = new List<string>(1024);
+        private readonly List<string> iUnitReferenceSet = new List<string>(100);
 
         /// <summary>
         /// Initializes a new instance. This instance is accessible via <see cref="Current"/> until 

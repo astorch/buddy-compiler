@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Bumblebee.buddy.compiler.exceptions;
 using Bumblebee.buddy.compiler.model.patternparameters.types;
-using xcite.collections;
 
 namespace Bumblebee.buddy.compiler.model.instructions.german {
     /// <summary>
@@ -37,7 +36,7 @@ namespace Bumblebee.buddy.compiler.model.instructions.german {
         /// <returns>Normalized word sequence</returns>
         public string[] Normalize(string[] words) {
             Queue<string> originalSequence = new Queue<string>(words);
-            LinearList<string> normalizedSequence = new LinearList<string>();
+            List<string> normalizedSequence = new List<string>(words.Length);
             int tokenIndex = 0;
 
             ParamPatternParameter paramPatternParameter = new ParamPatternParameter("value");

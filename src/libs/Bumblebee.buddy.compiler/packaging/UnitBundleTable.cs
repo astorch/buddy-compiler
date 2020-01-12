@@ -2,14 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using xcite.collections;
 
 namespace Bumblebee.buddy.compiler.packaging {
     /// <summary>
     /// Describes the content of a bundle that has been defined by the <see cref="UnitBundler"/>.
     /// </summary>
     public class UnitBundleTable : IEnumerable<UnitBundleTableEntry> {
-        private readonly LinearList<UnitBundleTableEntry> iEntryTable = new LinearList<UnitBundleTableEntry>();
+        private readonly List<UnitBundleTableEntry> iEntryTable = new List<UnitBundleTableEntry>(100);
 
         /// <summary>
         /// Adds a new entry to the table with the given values.
@@ -18,8 +17,8 @@ namespace Bumblebee.buddy.compiler.packaging {
         /// <param name="data">Data of the entry</param>
         /// <exception cref="ArgumentNullException">If any parameter is NULL</exception>
         public void AddEntry(string name, byte[] data) {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name", "Must not be NULL or empty");
-            if (data == null) throw new ArgumentNullException("data");
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name), "Must not be NULL or empty");
+            if (data == null) throw new ArgumentNullException(nameof(data));
 
             iEntryTable.Add(new UnitBundleTableEntry(name, data));
         }

@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using Bumblebee.buddy.compiler.collectiontools;
 using Bumblebee.buddy.compiler.model.evaluation;
 using Bumblebee.buddy.compiler.model.patternparameters;
-using xcite.collections;
 
 namespace Bumblebee.buddy.compiler.model {
     /// <summary>
@@ -22,8 +21,8 @@ namespace Bumblebee.buddy.compiler.model {
         /// <param name="paramCache">Parameter cache</param>
         /// <returns>Evaluation result</returns>
         public IInstructionEvaluationResult Evaluate(string instruction, InstructionTranslationInfo instructionInfo, IDictionary<string, IPatternParameter> paramCache) {
-            if (string.IsNullOrEmpty(instruction)) throw new ArgumentNullException("instruction");
-            if (instructionInfo == null) throw new ArgumentNullException("instructionInfo");
+            if (string.IsNullOrEmpty(instruction)) throw new ArgumentNullException(nameof(instruction));
+            if (instructionInfo == null) throw new ArgumentNullException(nameof(instructionInfo));
 
             string wordSequence = instruction;
 
@@ -37,7 +36,7 @@ namespace Bumblebee.buddy.compiler.model {
                 @"(?<top>""[^""]+"")(?<nav>\s(?<child>""[^""]+""))*\s(?<value>""[^""]+"")",
                 match => {
                     string prime = match.Groups["top"].Value;
-                    string sslValue = string.Join(", ", match.Groups["child"].Captures.ToArray());
+                    string sslValue = string.Join(", ", match.Groups["child"].Captures.ToArray<string>());
                     string value = match.Groups["value"].Value;
 
                     string[] joinSet = string.IsNullOrEmpty(sslValue) ? new[] {prime, value} : new[] {prime, sslValue, value};

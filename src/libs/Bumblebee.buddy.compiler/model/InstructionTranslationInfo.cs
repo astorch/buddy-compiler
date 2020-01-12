@@ -3,7 +3,6 @@ using Bumblebee.buddy.compiler.collectiontools;
 using Bumblebee.buddy.compiler.exceptions;
 using Bumblebee.buddy.compiler.model.patternparameters;
 using Bumblebee.buddy.compiler.model.tokens;
-using xcite.collections;
 
 namespace Bumblebee.buddy.compiler.model {
     /// <summary>
@@ -11,7 +10,7 @@ namespace Bumblebee.buddy.compiler.model {
     /// </summary>
     public class InstructionTranslationInfo {
         private readonly IBuddyTranslationInstruction iInstruction;
-        private readonly LinearList<IInstructionPatternToken> iInstructionTokens = new LinearList<IInstructionPatternToken>();
+        private readonly List<IInstructionPatternToken> iInstructionTokens = new List<IInstructionPatternToken>(1000);
 
         /// <summary>
         /// Creates a new instance for the given <paramref name="instruction"/>.
