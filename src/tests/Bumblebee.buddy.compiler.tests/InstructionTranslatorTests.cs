@@ -8,12 +8,12 @@ namespace Bumblebee.buddy.compiler.tests {
     [TestFixture]
     public class InstructionTranslatorTests {
 
-        [Test, TestCaseSource(typeof(TestCaseFactory), "TestCasesGetTranslationInstruction")]
+        [Test, TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCasesGetTranslationInstruction))]
         public IBuddyTranslationInstruction GetTranslationInstruction(string instruction) {
             return new InstructionTranslator().GetTranslationInstruction(instruction);
         }
 
-        [Test, TestCaseSource(typeof(TestCaseFactory), "TestCasesToDirective")]
+        [Test, TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCasesToDirective))]
         public string ToDirective(string line) {
             InstructionTranslator instructionTranslator = new InstructionTranslator();
             string directive = instructionTranslator.ToDirective(line);
@@ -24,6 +24,7 @@ namespace Bumblebee.buddy.compiler.tests {
             public IEnumerable<TestCaseData> TestCasesToDirective {
                 get {
                     yield return new TestCaseData(@"Starte ""C:\EGUB\EGUB.exe"".").Returns(@"processHandle1 = start(,, ""C:\EGUB\EGUB.exe"")");
+                    yield return new TestCaseData(@"Wechsle ""HIT"".").Returns(@"setsut(,, ""HIT"")");
                     yield return new TestCaseData(@"Warte <WindowAnmeldung> sichtbar.").Returns(@"wait(WindowAnmeldung, IsVisible, True, 60000)");
                     yield return new TestCaseData(@"Warte <WindowAnmeldung> verschwunden").Returns(@"wait(WindowAnmeldung, IsVisible, False, 60000)");
                     yield return new TestCaseData(@"Warte <Anwendung> bereit").Returns(@"wait(_Application, Idle, True, 60000)");

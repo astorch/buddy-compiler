@@ -42,7 +42,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1")
+                .AppendLine("// Buddy Compiler version 0.1.1")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"ListboxPinr\"")
@@ -104,7 +104,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1")
+                .AppendLine("// Buddy Compiler version 0.1.1")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"ListboxPinr\"")
@@ -164,7 +164,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1")
+                .AppendLine("// Buddy Compiler version 0.1.1")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"WindowAnmeldung\"")
@@ -235,7 +235,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1")
+                .AppendLine("// Buddy Compiler version 0.1.1")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("Unit Verwaltung.s.Anmeldung.Erfolgreiche_Anmeldung")
@@ -294,7 +294,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1")
+                .AppendLine("// Buddy Compiler version 0.1.1")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"ButtonAnmelden\"")
