@@ -85,6 +85,7 @@
     <Compile Include="model\IInstructionPatternToken.cs" />
     <Compile Include="model\instructions\german\ExecuteBuddyTranslationInstruction.cs" />
     <Compile Include="model\instructions\german\PressBuddyTranslationInstruction.cs" />
+    <Compile Include="model\instructions\german\SwitchBuddyTranslationInstruction.cs" />
     <Compile Include="model\InstructionTranslationInfo.cs" />
     <Compile Include="model\instructions\AbstractBuddyTranslationInstruction.cs" />
     <Compile Include="model\instructions\german\AssertBuddyTranslationInstruction.cs" />

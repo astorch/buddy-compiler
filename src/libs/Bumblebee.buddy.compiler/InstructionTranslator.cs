@@ -30,6 +30,7 @@ namespace Bumblebee.buddy.compiler {
             AddTranslationInstruction(new SelectBuddyTranslationInstruction());
             AddTranslationInstruction(new SetBuddyTranslationInstruction());
             AddTranslationInstruction(new StartBuddyTranslationInstruction());
+            AddTranslationInstruction(new SwitchBuddyTranslationInstruction());
             AddTranslationInstruction(new WaitBuddyTranslationInstruction());
             AddTranslationInstruction(new PressBuddyTranslationInstruction());
         }
