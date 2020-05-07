@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="BuddyCompiler.cs" />
     <Compile Include="collectiontools\StringExtensionMethods.cs" />
-    <Compile Include="CollectionX10.cs" />
+    <Compile Include="CaptureCollectionX10.cs" />
     <Compile Include="CompilingContext.cs" />
     <Compile Include="datastructures\SynMap.cs" />
     <Compile Include="exceptions\UnitNameFormatException.cs" />

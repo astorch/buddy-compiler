@@ -3,15 +3,8 @@ using System.Text.RegularExpressions;
 
 namespace Bumblebee.buddy.compiler {
     /// <summary> Provides extension methods for <see cref="ICollection"/>. </summary>
-    public static class CollectionX10 {
-        /// <summary> Returns all items of the <paramref name="collection"/> as array. </summary>
-        /// <typeparam name="TItem">Type of elements in the collection</typeparam>
-        public static TItem[] ToArray<TItem>(this ICollection collection) {
-            TItem[] resultSet = new TItem[collection.Count];
-            collection.CopyTo(resultSet, 0);
-            return resultSet;
-        }
-
+    public static class CaptureCollectionX10 {
+        
         /// <summary>
         /// Returns all item of the <paramref name="collection"/> as string array.
         /// The string is taken from the collection item value.
@@ -24,5 +17,6 @@ namespace Bumblebee.buddy.compiler {
 
             return resultSet;
         }
+        
     }
 }
