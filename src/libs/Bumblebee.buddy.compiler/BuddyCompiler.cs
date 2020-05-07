@@ -296,7 +296,7 @@ namespace Bumblebee.buddy.compiler {
         /// <returns><paramref name="buddyText"/> without articles</returns>
         public virtual string StripPrepositions(string buddyText) {
             // Prepositions to remove
-            string[] prepositions = {"in", "im", "aus", "ein", "ob", "bis", "auf"};
+            string[] prepositions = {"in", "im", "aus", "ein", "ob", "bis", "auf", "zu"};
 
             string strippedBuddyText = buddyText;
             for (WordIterator itr = buddyText.GetWordIterator(); itr.MoveNext();) {
