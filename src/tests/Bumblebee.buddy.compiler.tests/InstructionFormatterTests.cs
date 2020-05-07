@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Bumblebee.buddy.compiler.model;
 using Bumblebee.buddy.compiler.model.instructions.german;
@@ -9,16 +10,15 @@ namespace Bumblebee.buddy.compiler.tests {
     [TestFixture]
     public class InstructionFormatterTests {
         
-        [Test, TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [Test, TestCaseSource(typeof(TestCaseFactory))]
         public string ToString(IBuddyTranslationInstruction translationInstruction, IDictionary<string, IPatternParameter> parameters) {
             InstructionFormatter instructionFormatter = new InstructionFormatter();
             return instructionFormatter.ToString(translationInstruction, parameters);
         }
 
-        class TestCaseFactory {
-            public static IEnumerable<TestCaseData> TestCases {
-                get {
-                    yield return new TestCaseData(null, null)
+        class TestCaseFactory : IEnumerable {
+            public IEnumerator GetEnumerator() {
+                yield return new TestCaseData(null, null)
                         .SetName("ArgumentNullException for instruction")
                         .Throws(typeof(ArgumentNullException));
 
@@ -102,6 +102,17 @@ namespace Bumblebee.buddy.compiler.tests {
                         new TestParamInfo {Name = "path", Type = "string", Value = "\"C:\\EGUB\\EGUB.exe\""}
                     })).SetName("start with path")
                        .Returns("processHandle1 = start(,, \"C:\\EGUB\\EGUB.exe\")");
+                    
+                    // Switch
+                    yield return new TestCaseData(new SwitchBuddyTranslationInstruction(), MapToParameters(new List<TestParamInfo> {
+                        new TestParamInfo {Name = "path", Type = "string", Value = "\"C:\\EGUB\\HIT.exe\""}
+                    })).SetName("Switch with path")
+                        .Returns("setsut(,, \"C:\\EGUB\\HIT.exe\")");
+                    
+                    yield return new TestCaseData(new SwitchBuddyTranslationInstruction(), MapToParameters(new List<TestParamInfo> {
+                            new TestParamInfo {Name = "path", Type = "string", Value = "\"HIT\""}
+                        })).SetName("Switch with constant")
+                        .Returns("setsut(,, \"HIT\")");
 
                     // Wait
                     yield return new TestCaseData(new WaitBuddyTranslationInstruction(), MapToParameters(new List<TestParamInfo> {
@@ -177,7 +188,6 @@ namespace Bumblebee.buddy.compiler.tests {
                         new TestParamInfo {Name = "kind", Type = "frequence", Value = "doppelt"}
                     })).SetName("press key double, combined")
                        .Returns("pressKey(, KeyType, \"STRG+SHIFT+S\", Double)");
-                }
             }
 
             private static IDictionary<string, IPatternParameter> MapToParameters(IList<TestParamInfo> parameters) {
