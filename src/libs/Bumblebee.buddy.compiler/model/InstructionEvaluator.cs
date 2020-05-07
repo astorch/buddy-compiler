@@ -36,7 +36,7 @@ namespace Bumblebee.buddy.compiler.model {
                 @"(?<top>""[^""]+"")(?<nav>\s(?<child>""[^""]+""))*\s(?<value>""[^""]+"")",
                 match => {
                     string prime = match.Groups["top"].Value;
-                    string sslValue = string.Join(", ", match.Groups["child"].Captures.ToArray<string>());
+                    string sslValue = string.Join(", ", match.Groups["child"].Captures.ToArray());
                     string value = match.Groups["value"].Value;
 
                     string[] joinSet = string.IsNullOrEmpty(sslValue) ? new[] {prime, value} : new[] {prime, sslValue, value};
