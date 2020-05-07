@@ -135,6 +135,63 @@ namespace Bumblebee.buddy.compiler.tests {
 
             Assert.AreEqual(expectedTdilText, compiledTdilText, "compiledTdilText");
         }
+        
+        [Test]
+        public void Compile_Ok_StartSelectSetSwitch() {
+            // Arrange
+            StringBuilder buddyTextBuilder = new StringBuilder();
+            buddyTextBuilder
+                .AppendLine("Schritte:")
+                .AppendLine("Starte \"C:\\EGUB\\EGUB.exe\".")
+                .AppendLine("Wähle \"000\" in <ListboxPinr> aus.")
+                .AppendLine("Setze \"Passw000\" in <TextboxPass> ein.")
+                .AppendLine("Wechsle zu \"HIT\".");
+
+            string buddyText = buddyTextBuilder.ToString();
+            
+            // Act
+            BuddyCompiler buddyCompiler = new BuddyCompiler();
+            DateTime now = DateTime.Now;
+            string compiledTdilText = buddyCompiler.Compile(buddyText);
+
+            // Assert
+            Assert.IsNotNullOrEmpty(compiledTdilText);
+
+            StringBuilder expectedTdilTextBuilder = new StringBuilder();
+            expectedTdilTextBuilder
+                .AppendLine("// Compiler generated file")
+                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Generated on {date}")
+                .AppendLine()
+                .AppendLine("#alias \"ListboxPinr\"")
+                .AppendLine("#alias \"TextboxPass\"")
+                .AppendLine()
+                .AppendLine("Unit untitled.s.untitled.untitled")
+                .AppendLine()
+                .AppendLine("Main:")
+                .AppendLine("start(,, \"{untitled}\")")
+                .AppendLine("gosub untitled:")
+                .AppendLine("close(_Application,, Default)")
+                .AppendLine("kill(_Application,, 3000)")
+                .AppendLine("close(\"AcroRd32\",, Default)")
+                .AppendLine("kill(\"AcroRd32\",, 3000)")
+                .AppendLine("End")
+                .AppendLine()
+                .AppendLine("untitled:")
+                .AppendLine("processHandle1 = start(,, \"C:\\EGUB\\EGUB.exe\")")
+                .AppendLine("select(ListboxPinr, Value, \"000\")")
+                .AppendLine("set(TextboxPass, Text, \"Passw000\")")
+                .AppendLine("setsut(,, \"HIT\")")
+                .AppendLine("End")
+                .AppendLine()
+                .AppendLine("End")
+                .AppendLine();
+
+            string expectedTdilText = expectedTdilTextBuilder.ToString();
+            expectedTdilText = expectedTdilText.Replace("{date}", now.ToString());
+
+            Assert.AreEqual(expectedTdilText, compiledTdilText, "compiledTdilText");
+        }
 
         [Test]
         public void Compile_Ok_EgubSampleFull() {
