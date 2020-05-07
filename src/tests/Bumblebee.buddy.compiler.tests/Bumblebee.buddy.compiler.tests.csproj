@@ -65,6 +65,7 @@
     <Compile Include="model\instructions\german\SelectInstructionTests.cs" />
     <Compile Include="model\instructions\german\SetInstructionTests.cs" />
     <Compile Include="model\instructions\german\StartInstructionTests.cs" />
+    <Compile Include="model\instructions\german\SwitchInstructionTests.cs" />
     <Compile Include="model\instructions\german\WaitInstructionTests.cs" />
     <Compile Include="model\instructions\_ErrorEvaluationResult.cs" />
     <Compile Include="packaging\UnitBundlerTests.cs" />
