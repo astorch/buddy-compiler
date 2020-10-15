@@ -37,8 +37,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Simplex, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Simplex.1.0.0\lib\netstandard2.0\Simplex.dll</HintPath>
+    <Reference Include="Simplex, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\Simplex.1.0.1\lib\netstandard2.0\Simplex.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -47,8 +48,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xcite.csharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\xcite.csharp.7.0.2\lib\netstandard2.0\xcite.csharp.dll</HintPath>
+    <Reference Include="xcite.csharp, Version=7.2.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\xcite.csharp.7.2.0\lib\netstandard2.0\xcite.csharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
