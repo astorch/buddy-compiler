@@ -1,5 +1,5 @@
 ﻿namespace bumblebee.buddy.compiler2.exceptions {
-    public class EBuddyCompileError : xcite.csharp.exceptions.EErrorReason {
+    public class EBuddyCompileError : xcite.csharp.exceptions.EErrorReason<EBuddyCompileError> {
 
         public static readonly EBuddyCompileError Unknown = new EBuddyCompileError("Unknown", 0, "Unknown error.");
 
