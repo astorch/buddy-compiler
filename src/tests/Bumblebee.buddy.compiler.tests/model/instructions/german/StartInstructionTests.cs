@@ -10,7 +10,7 @@ namespace Bumblebee.buddy.compiler.tests.model.instructions.german {
     [TestFixture]
     public class StartInstructionTests {
 
-        [Test, TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory))]
+        [Test, TestCaseSource(typeof(TestCaseFactory))]
         public IInstructionEvaluationResult Evaluate(string instruction) {
             return new InstructionEvaluator().Evaluate(
                 instruction,
