@@ -194,8 +194,23 @@ namespace Bumblebee.buddy.compiler {
             ushort instructionCount = 0;
 
             bool escapeMode = false;
-            for (int i = -1; ++i != instructionText.Length;) {
+            for (int i = -1, ilen = instructionText.Length; ++i != ilen;) {
                 char c = instructionText[i];
+                
+                // Ignore comments
+                if (c == '/' && i + 1 != ilen && instructionText[i + 1] == '/') {
+                    int j = i;
+                    int jlen = ilen;
+                    while (++j != jlen && instructionText[j] != '\r')
+                        // Loop forward
+                        ;
+
+                    if (j + 1 != ilen && instructionText[j + 1] == '\n')
+                        j++;
+
+                    i = j;
+                    continue;
+                }
                 
                 // Toggle escape mode
                 if (c == '"')
