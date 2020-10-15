@@ -14,13 +14,13 @@ namespace Bumblebee.buddy.compiler.simplex {
     /// The first initialization of a class instance may take more time because the buddy grammar is loaded.<br/>
     /// </summary>
     public class BuddyTextProcessor {
-        private static IGrammar iBuddyGrammar;
+        private static IGrammar _buddyGrammar;
 
-        private ILexer iBuddyTextLexer;
+        private ILexer _buddyTextLexer;
         
-        private BuddyTextInfo iCurrentBuddyTextInfo;
-        private List<string> iCurrentActionLines;
-        private List<BuddyTextParameter> iCurrentParameters; 
+        private BuddyTextInfo _currentBuddyTextInfo;
+        private List<string> _currentActionLines;
+        private List<BuddyTextParameter> _currentParameters; 
 
         /// <summary>
         /// Creates a new instance. Parses the buddy grammar the first time this class is instantiated.
@@ -42,25 +42,25 @@ namespace Bumblebee.buddy.compiler.simplex {
             
             // Ensure the instance has been set up correctly
             SetUp();
-            if (iBuddyTextLexer == null) throw new BuddyTextProcessorException("SetUp() hasn't been called before!");
+            if (_buddyTextLexer == null) throw new BuddyTextProcessorException("SetUp() hasn't been called before!");
 
             // Initialize
-            iCurrentBuddyTextInfo = new BuddyTextInfo();
-            iCurrentActionLines = new List<string>();
-            iCurrentParameters = new List<BuddyTextParameter>();
+            _currentBuddyTextInfo = new BuddyTextInfo();
+            _currentActionLines = new List<string>(20);
+            _currentParameters = new List<BuddyTextParameter>(10);
 
             // Process
             try {
-                iBuddyTextLexer.Process(buddyText);
+                _buddyTextLexer.Process(buddyText);
             } catch (Exception ex) {
                 throw new BuddyTextProcessorException("Error on processing the given buddy text", ex);
             }
 
             // Set up results
-            iCurrentBuddyTextInfo.Steps = iCurrentActionLines.ToArray();
-            iCurrentBuddyTextInfo.Parameters = iCurrentParameters.ToArray();
+            _currentBuddyTextInfo.Steps = _currentActionLines.ToArray();
+            _currentBuddyTextInfo.Parameters = _currentParameters.ToArray();
 
-            return iCurrentBuddyTextInfo;
+            return _currentBuddyTextInfo;
         }
 
         /// <summary>
@@ -69,21 +69,21 @@ namespace Bumblebee.buddy.compiler.simplex {
         /// before <see cref="ProcessText"/> is invoked.
         /// </summary>
         private void SetUp() {
-            if (iBuddyTextLexer != null) return;
-            iBuddyTextLexer = new Lexer(iBuddyGrammar);
+            if (_buddyTextLexer != null) return;
+            _buddyTextLexer = new Lexer(_buddyGrammar);
 
-            iBuddyTextLexer.AddSymbolMatchHandler("app_title", OnApplicationTitleResolved);
-            iBuddyTextLexer.AddSymbolMatchHandler("app_version", OnApplicationVersionResolved);
+            _buddyTextLexer.AddSymbolMatchHandler("app_title", OnApplicationTitleResolved);
+            _buddyTextLexer.AddSymbolMatchHandler("app_version", OnApplicationVersionResolved);
 
-            iBuddyTextLexer.AddSymbolMatchHandler("usecase_descr", OnUseCaseDeclarationResolved);
-            iBuddyTextLexer.AddSymbolMatchHandler("scene_descr", OnScenarioDeclarationResolved);
+            _buddyTextLexer.AddSymbolMatchHandler("usecase_descr", OnUseCaseDeclarationResolved);
+            _buddyTextLexer.AddSymbolMatchHandler("scene_descr", OnScenarioDeclarationResolved);
 
-            iBuddyTextLexer.AddSymbolMatchHandler("import_statement", OnImportStatementResolved);
+            _buddyTextLexer.AddSymbolMatchHandler("import_statement", OnImportStatementResolved);
             
-            iBuddyTextLexer.AddSymbolMatchHandler("precond_descr", OnPreconditionDeclarationResolved);
+            _buddyTextLexer.AddSymbolMatchHandler("precond_descr", OnPreconditionDeclarationResolved);
 
-            iBuddyTextLexer.AddSymbolMatchHandler("step", OnStepResolved);
-            iBuddyTextLexer.AddSymbolMatchHandler("assignment", OnAssignmentResolved);
+            _buddyTextLexer.AddSymbolMatchHandler("step_text", OnStepTextResolved);
+            _buddyTextLexer.AddSymbolMatchHandler("assignment", OnAssignmentResolved);
         }
 
         /// <summary>
@@ -96,17 +96,17 @@ namespace Bumblebee.buddy.compiler.simplex {
             string paramName = parts[0].Trim();
             string paramDfltValue = parts[1].Trim();
 
-            iCurrentParameters.Add(new BuddyTextParameter(paramName, paramDfltValue));
+            _currentParameters.Add(new BuddyTextParameter(paramName, paramDfltValue));
         }
 
         /// <summary>
         /// Is invoked when an action line (called step) has been resolved.
         /// </summary>
         /// <param name="match">Text match</param>
-        private void OnStepResolved(string match) {
+        private void OnStepTextResolved(string match) {
             int dotIndex = match.LastIndexOf('.');
             string step = match.Substring(0, dotIndex + 1);
-            iCurrentActionLines.Add(step);
+            _currentActionLines.Add(step);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Bumblebee.buddy.compiler.simplex {
         /// </summary>
         /// <param name="match">Text match</param>
         private void OnPreconditionDeclarationResolved(string match) {
-            iCurrentBuddyTextInfo.Precondition = "-";
+            _currentBuddyTextInfo.Precondition = "-";
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Bumblebee.buddy.compiler.simplex {
                 scenarioText = scenarioText.Substring(0, lbraceIndex + shift);
             }
 
-            iCurrentBuddyTextInfo.ScenarioText = scenarioText;
+            _currentBuddyTextInfo.ScenarioText = scenarioText;
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Bumblebee.buddy.compiler.simplex {
         /// <param name="match">Text match</param>
         private void OnUseCaseDeclarationResolved(string match) {
             string useCaseText = match.Substring("Anwendungsfall:".Length).Trim();
-            iCurrentBuddyTextInfo.UseCaseText = useCaseText;
+            _currentBuddyTextInfo.UseCaseText = useCaseText;
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Bumblebee.buddy.compiler.simplex {
         /// <param name="match">Text match</param>
         private void OnApplicationTitleResolved(string match) {
             string applicationText = match.Trim();
-            iCurrentBuddyTextInfo.ApplicationText = applicationText;
+            _currentBuddyTextInfo.ApplicationText = applicationText;
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Bumblebee.buddy.compiler.simplex {
         /// <param name="match">Text match</param>
         private void OnApplicationVersionResolved(string match) {
             string versionText = match.Substring(1, match.Length - 2).Trim();
-            iCurrentBuddyTextInfo.VersionText = versionText;
+            _currentBuddyTextInfo.VersionText = versionText;
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Bumblebee.buddy.compiler.simplex {
         /// </summary>
         /// <exception cref="BuddyTextProcessorException">If the during the parsing process occurs an error</exception>
         private static void Initialize() {
-            if (iBuddyGrammar != null) return;
+            if (_buddyGrammar != null) return;
 
             Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Bumblebee.buddy.compiler.simplex.Buddy.gr");
             if (stream == null) throw new BuddyTextProcessorException("Could not open a stream to the buddy grammar file");
@@ -192,13 +192,13 @@ namespace Bumblebee.buddy.compiler.simplex {
 
             try {
                 GrammarParser parser = new GrammarParser(grammar);
-                iBuddyGrammar = parser.Parse();
+                _buddyGrammar = parser.Parse();
             } catch (Exception ex) {
                 throw new BuddyTextProcessorException("Error on parsing buddy grammar", ex);
             }
 
-            if (!iBuddyGrammar.IsValid) throw new BuddyTextProcessorException("Constructed grammar is not valid!");
-            if (iBuddyGrammar.Root.Id != "file") throw new BuddyTextProcessorException("Invalid root rule. Constructed grammar is not valid!");
+            if (!_buddyGrammar.IsValid) throw new BuddyTextProcessorException("Constructed grammar is not valid!");
+            if (_buddyGrammar.Root.Id != "file") throw new BuddyTextProcessorException("Invalid root rule. Constructed grammar is not valid!");
         }
     }
 }
