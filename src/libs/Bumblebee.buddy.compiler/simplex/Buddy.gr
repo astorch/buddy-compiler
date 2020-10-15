@@ -93,7 +93,8 @@ text_fragment		= aliasRef | unitRef | paramRef | empty_quotes | word_extended_se
 text_link			= (COMMA)? WS;
 text				= text_fragment (text_link text_fragment)*;
 step_core			= text DOT;
-step				= step_core (WS)* (comment)? (linefeed)*;
+step_text           = step_core (WS)* (comment)? (linefeed)*;
+step				= comment | step_text;
 step_decl			= STEPS COLON (WS)* linefeed;
 
 value_expr			= empty_quotes | word_extended_sequence_quoted;
