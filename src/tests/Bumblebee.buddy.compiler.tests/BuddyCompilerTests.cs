@@ -794,6 +794,108 @@ namespace Bumblebee.buddy.compiler.tests {
 
             Assert.AreEqual(expectedTdilText, compiledTdilText, "compiledTdilText");
         }
+        
+        [Test]
+        public void Compile_Ok_WithMultipleComments() {
+            // Arrange
+            StringBuilder buddyTextBuilder = new StringBuilder();
+            buddyTextBuilder
+                .AppendLine("Anwendung: Verwaltung")
+                .AppendLine()
+                .AppendLine("Anwendungsfall: Adressen")
+                .AppendLine()
+                .AppendLine("Szenario: Neue Adresse anlegen")
+                .AppendLine("benutzt Verwaltung.s.Grundtest.Erfolgreiche_Anmeldung")
+                .AppendLine()
+                .AppendLine("Schritte:")
+                .AppendLine("Führe [Erfolgreiche Anmeldung] (\"00999\", \"001*\", \"Pasw001\") aus.")
+                .AppendLine("Klicke <Button:Adressen>.")
+                .AppendLine("Klicke <MenuButton:Adr_NeueAdresse>.")
+                .AppendLine("//Button Adresse ist nicht in der DropDown Liste sichtbar. Wie soll ich in dem Fall Button benennen?")
+                .AppendLine("//Klicke <Button:NächsteNummer>.")
+                .AppendLine("Wähle \"Amtliche Untersuchungsstelle\" in <Combo:Art> aus.")
+                .AppendLine("Setze \"Test Büro GTÜ\" in <Textbox:Addresszeile2> ein.")
+                .AppendLine("Setze \"Auf der Steig 100\" in <Textbox:Straße_Hausnr> ein.")
+                .AppendLine("Setze \"70376\" in <Textbox:PLZ_Ort> ein.")
+                .AppendLine("// Ist dieser Tab immer sichtbar?")
+                .AppendLine("// Wie kann ich das alternativ handhaben?")
+                .AppendLine("Klicke <Tab:UStelle>.")
+                .AppendLine("Wähle \"Prüfstelle\" in <Combo:ArtDerUntersuchungstelle> aus.")
+                .AppendLine("Wähle \"Fahrzeuge ohne Druckbremse\" in <Combo:Nutzungsbereich> aus.")
+                .AppendLine("Klicke <Tab:Faktur>.")
+                .AppendLine("Wähle \"Kundenfahrzeuge / Bericht ist Rechnung (mit MwSt.) / durchlaufender Posten\" in <Combo:Verwendungsbereich> aus.")
+                .AppendLine("Klicke <MenuButton:Speichern>.")
+                .AppendLine("Schließe Anwendung.")
+                ;
+
+            string buddyText = buddyTextBuilder.ToString();
+            
+            // Act
+            BuddyCompiler buddyCompiler = new BuddyCompiler {ImportPathProvider = new _ImportPathProviderImpl()};
+            DateTime now = DateTime.Now;
+            string compiledTdilText = buddyCompiler.Compile(buddyText);
+
+            // Assert
+            Assert.IsNotNull(compiledTdilText);
+            Assert.IsNotEmpty(compiledTdilText);
+            
+            StringBuilder expectedTdilTextBuilder = new StringBuilder();
+            expectedTdilTextBuilder
+                .AppendLine("// Compiler generated file")
+                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Generated on {date}")
+                .AppendLine()
+                .AppendLine("#alias \"Button:Adressen\"")
+                .AppendLine("#alias \"MenuButton:Adr_NeueAdresse\"")
+                .AppendLine("#alias \"Combo:Art\"")
+                .AppendLine("#alias \"Textbox:Addresszeile2\"")
+                .AppendLine("#alias \"Textbox:Straße_Hausnr\"")
+                .AppendLine("#alias \"Textbox:PLZ_Ort\"")
+                .AppendLine("#alias \"Tab:UStelle\"")
+                .AppendLine("#alias \"Combo:ArtDerUntersuchungstelle\"")
+                .AppendLine("#alias \"Combo:Nutzungsbereich\"")
+                .AppendLine("#alias \"Tab:Faktur\"")
+                .AppendLine("#alias \"Combo:Verwendungsbereich\"")
+                .AppendLine("#alias \"MenuButton:Speichern\"")
+                .AppendLine()
+                .AppendLine("#include \"test.unkown.none.Erfolgreiche_Anmeldung\"")
+                .AppendLine()
+                .AppendLine("Unit Verwaltung.s.Adressen.Neue_Adresse_anlegen")
+                .AppendLine()
+                .AppendLine("Main:")
+                .AppendLine("start(,, \"{Verwaltung}\")")
+                .AppendLine("gosub Neue_Adresse_anlegen:")
+                .AppendLine("close(_Application,, Default)")
+                .AppendLine("kill(_Application,, 3000)")
+                .AppendLine("close(\"AcroRd32\",, Default)")
+                .AppendLine("kill(\"AcroRd32\",, 3000)")
+                .AppendLine("End")
+                .AppendLine()
+                .AppendLine("Neue_Adresse_anlegen:")
+                .AppendLine("gosub Erfolgreiche_Anmeldung:(\"00999\", \"001*\", \"Pasw001\")")
+                .AppendLine("click(Button:Adressen, , Single)")
+                .AppendLine("click(MenuButton:Adr_NeueAdresse, , Single)")
+                .AppendLine("select(Combo:Art, Value, \"Amtliche Untersuchungsstelle\")")
+                .AppendLine("set(Textbox:Addresszeile2, Text, \"Test Büro GTÜ\")")
+                .AppendLine("set(Textbox:Straße_Hausnr, Text, \"Auf der Steig 100\")")
+                .AppendLine("set(Textbox:PLZ_Ort, Text, \"70376\")")
+                .AppendLine("click(Tab:UStelle, , Single)")
+                .AppendLine("select(Combo:ArtDerUntersuchungstelle, Value, \"Prüfstelle\")")
+                .AppendLine("select(Combo:Nutzungsbereich, Value, \"Fahrzeuge ohne Druckbremse\")")
+                .AppendLine("click(Tab:Faktur, , Single)")
+                .AppendLine("select(Combo:Verwendungsbereich, Value, \"Kundenfahrzeuge / Bericht ist Rechnung (mit MwSt.) / durchlaufender Posten\")")
+                .AppendLine("click(MenuButton:Speichern, , Single)")
+                .AppendLine("close(_Application, , Default)")
+                .AppendLine("End")
+                .AppendLine()
+                .AppendLine("End")
+                .AppendLine();
+
+            string expectedTdilText = expectedTdilTextBuilder.ToString();
+            expectedTdilText = expectedTdilText.Replace("{date}", now.ToString());
+
+            Assert.AreEqual(expectedTdilText, compiledTdilText, "compiledTdilText");
+        }
 
         class _ImportPathProviderImpl : IImportPathProvider {
             /// <inheritdoc />
