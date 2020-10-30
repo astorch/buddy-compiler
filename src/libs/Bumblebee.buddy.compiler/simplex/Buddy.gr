@@ -32,6 +32,7 @@ MINUS			= '-';
 PLUS			= '+';
 EMARK			= '!';
 QMARK			= '?';
+ARTCL           = '§';
 
 DIGIT_NATURAL		= '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 					 ;
@@ -50,7 +51,7 @@ CHAR_UPPER			= 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K'
 linefeed			= CR NL;
 digit				= ZERO | DIGIT_NATURAL;
 char				= digit | CHAR_UPPER | CHAR_LOWER;
-char_special		= COMMA | COLON | DOT | EMARK | QMARK | AND | AT | BSL | SSL | UDRS | MINUS | PLUS | LBRACE | RBRACE | LCB | RCB | '§' | '€' | '*';
+char_special		= COMMA | COLON | DOT | EMARK | QMARK | AND | AT | BSL | SSL | UDRS | MINUS | PLUS | LBRACE | RBRACE | LCB | RCB | ARTCL | '€' | '*';
 char_extended		= char_special | char;
 
 // Next line is a workaround due to a bug (char)+ -> char (char)*
@@ -61,8 +62,8 @@ word_extended					= char_extended (char_extended)*;
 word_extended_sequence			= word_extended (WS word_extended)*;
 word_extended_sequence_quoted	= DQUOTE word_extended_sequence DQUOTE;
 
-scene_header_text				= word (WS | COMMA | '§' | MINUS | UDRS | word)*;
-comment_text					= word_extended (WS | DQUOTE | '§' | word_extended)*;
+scene_header_text				= word (WS | COMMA | ARTCL | MINUS | UDRS | word)*;
+comment_text					= word_extended (WS | DQUOTE | ARTCL | LAB | RAB | word_extended)*;
 
 empty_quotes					= DQUOTE DQUOTE;
 comment							= (WS)* DSL (WS)* comment_text linefeed;
