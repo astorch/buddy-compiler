@@ -8,9 +8,7 @@ using log4net;
 namespace bumblebee.buddy.compiler.host {
     /// <summary> Provides the entry point of the application. </summary>
     public static class EntryPoint {
-        /// <summary>
-        /// Implements the main method of the application.
-        /// </summary>
+        /// <summary> Implements the main method of the application. </summary>
         /// <param name="args">Execution arguments</param>
         /// <returns>Execution result code</returns>
         public static int Main(string[] args) {
