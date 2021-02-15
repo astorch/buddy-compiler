@@ -2,27 +2,18 @@
 using Bumblebee.buddy.compiler.datastructures;
 
 namespace Bumblebee.buddy.compiler {
-    /// <summary>
-    /// Implements a registry of <see cref="SynMap"/>.
-    /// </summary>
+    /// <summary> Implements a registry of <see cref="SynMap"/>. </summary>
     public class SynMapRegistry {
-        private static readonly List<SynMap> iRegisteredSynonymMaps = new List<SynMap>();
+        private static readonly List<SynMap> _registeredSynonymMaps = new List<SynMap>();
 
-        /// <summary>
-        /// Static initializer.
-        /// </summary>
+        /// <summary> Static initializer. </summary>
         static SynMapRegistry() {
             Initialize();
         }
 
-        /// <summary>
-        /// Returns an enumerable collection of all registered synonym maps.
-        /// </summary>
-        public IEnumerable<SynMap> RegisteredSynonymMaps {
-            get {
-                return iRegisteredSynonymMaps;
-            }
-        }
+        /// <summary> Returns an enumerable collection of all registered synonym maps. </summary>
+        public IEnumerable<SynMap> RegisteredSynonymMaps 
+            => _registeredSynonymMaps;
 
         /// <summary>
         /// Returns TRUE if the registry contains a synonym map that contains the given <paramref name="word"/> 
@@ -34,8 +25,8 @@ namespace Bumblebee.buddy.compiler {
         /// <returns>TRUE or FALSE</returns>
         public bool TryGetRootWord(string word, out string rootWord) {
             rootWord = word;
-            for (int i = -1; ++i != iRegisteredSynonymMaps.Count;) {
-                SynMap synMap = iRegisteredSynonymMaps[i];
+            for (int i = -1; ++i != _registeredSynonymMaps.Count;) {
+                SynMap synMap = _registeredSynonymMaps[i];
                 if (synMap.IsSynonym(word)) {
                     rootWord = synMap.RootWord;
                     return true;
@@ -49,16 +40,16 @@ namespace Bumblebee.buddy.compiler {
         /// </summary>
         private static void Initialize() {
             SynMap clickMap = new SynMap("Klicke");
-            iRegisteredSynonymMaps.Add(clickMap);
+            _registeredSynonymMaps.Add(clickMap);
 
             SynMap buttonMap = new SynMap("Button");
-            iRegisteredSynonymMaps.Add(buttonMap);
+            _registeredSynonymMaps.Add(buttonMap);
 
             SynMap assertMap = new SynMap("Prüfe");
-            iRegisteredSynonymMaps.Add(assertMap);
+            _registeredSynonymMaps.Add(assertMap);
 
             SynMap closeMap = new SynMap("Schließe");
-            iRegisteredSynonymMaps.Add(closeMap);
+            _registeredSynonymMaps.Add(closeMap);
 
             // Fill click map
             clickMap.AddSynonym("klick");

@@ -53,14 +53,15 @@ namespace Bumblebee.buddy.compiler.model {
             if (words.Length == 0) return EvaluationResult.Error(wordSequence, instructionInfo.Instruction, "Instruction is empty after strip");
 
             // Normalize variants
-            IVariantInstruction variantInstruction = instructionInfo.Instruction as IVariantInstruction;
-            if (variantInstruction != null)
+            if (instructionInfo.Instruction is IVariantInstruction variantInstruction)
                 words = variantInstruction.Normalize(words);
 
             // Iterate words and check for match
             int wordIndex = 0;
             for (IEnumerator<IInstructionPatternToken> tokenItr = instructionInfo.GetInstructionPatternTokenEnumerator(); tokenItr.MoveNext();) {
                 IInstructionPatternToken token = tokenItr.Current;
+                if (token == null) throw new InvalidOperationException("Token iterator provided NULL token");
+                
                 string word;
 
                 // Take the word from the sequence
@@ -77,15 +78,14 @@ namespace Bumblebee.buddy.compiler.model {
                     wordIndex++;
 
                     // Resolve parametrized tokens
-                    IParametrizedInstructionPatternToken parametrizedToken = token as IParametrizedInstructionPatternToken;
-                    if (parametrizedToken != null) {
+                    if (token is IParametrizedInstructionPatternToken parametrizedToken) {
                         IPatternParameter patternParameter = parametrizedToken.Value;
                         string parameterName = patternParameter.Name;
 
                         // If the value has been replaced by a ValueSequenceToken before, we have to re-replace it now
                         if (valueSequenceString != null) { // Something must have been replaced
                             if (patternParameter.Value.Value.Equals(ValueSequenceToken)) { // Is this the correct parameter?
-                                ((AbstractPatternParameter)patternParameter).SetValue(valueSequenceString);
+                                ((AbstractPatternParameter) patternParameter).SetValue(valueSequenceString);
                             }
                         }
                         
@@ -100,8 +100,13 @@ namespace Bumblebee.buddy.compiler.model {
                 // If the token is not mandatory, we can go forward
                 if (!token.IsMandatory) continue;
 
-                return EvaluationResult.Error(wordSequence, instructionInfo.Instruction, 
-                    string.Format("{0} word of instruction does not match expected token '{1}'. Word is '{2}'", FormatWordIndex(wordIndex), token.ToHumanReadableString(), word));
+                return EvaluationResult.Error(
+                    wordSequence,
+                    instructionInfo.Instruction,
+                    $"{FormatWordIndex(wordIndex)} word of instruction " +
+                    $"does not match expected token '{token.ToHumanReadableString()}'. " +
+                    $"Word is '{word}'"
+                );
             }                
 
             return EvaluationResult.Ok;

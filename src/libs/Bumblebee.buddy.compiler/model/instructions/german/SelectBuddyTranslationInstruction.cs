@@ -4,34 +4,24 @@ using Bumblebee.buddy.compiler.exceptions;
 using Bumblebee.buddy.compiler.model.patternparameters.types;
 
 namespace Bumblebee.buddy.compiler.model.instructions.german {
-    /// <summary>
-    /// Implements <see cref="IBuddyTranslationInstruction"/> for the 'select' action.
-    /// </summary>
+    /// <summary> Implements <see cref="IBuddyTranslationInstruction"/> for the 'select' action. </summary>
     public class SelectBuddyTranslationInstruction : AbstractBuddyTranslationInstruction, IVariantInstruction {
-        /// <summary>
-        /// Returns id of the action step.
-        /// </summary>
+        /// <summary> Returns id of the action step. </summary>
         public override string InstructionId {
             get { return "Wähle"; }
         }
 
-        /// <summary>
-        /// Returns the pattern description of the action step.
-        /// </summary>
+        /// <summary> Returns the pattern description of the action step. </summary>
         public override string InstructionPattern {
             get { return "Wähle {name:value,type:param} <{name:alias,type:alias}>"; }
         }
 
-        /// <summary>
-        /// Returns the resulting TDIL pattern of the action step.
-        /// </summary>
+        /// <summary> Returns the resulting TDIL pattern of the action step. </summary>
         public override string TdilPattern {
             get { return "select(~alias, Value, ~value)"; }
         }
 
-        /// <summary>
-        /// Returns the normalized word sequence for given <paramref name="words"/>.
-        /// </summary>
+        /// <summary> Returns the normalized word sequence for given <paramref name="words"/>. </summary>
         /// <param name="words">Word sequence to normalize</param>
         /// <returns>Normalized word sequence</returns>
         public string[] Normalize(string[] words) {

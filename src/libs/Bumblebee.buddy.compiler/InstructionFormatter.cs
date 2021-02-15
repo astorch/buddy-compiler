@@ -25,17 +25,16 @@ namespace Bumblebee.buddy.compiler {
         /// <exception cref="ArgumentNullException">If any parameter is NULL</exception>
         /// <exception cref="InstructionFormattingException">If not all declared parameters could be replaced</exception>
         public virtual string ToString(IBuddyTranslationInstruction actionStep, IDictionary<string, IPatternParameter> parameters) {
-            if (actionStep == null) throw new ArgumentNullException("actionStep");
-            if (parameters == null) throw new ArgumentNullException("parameters");
+            if (actionStep == null) throw new ArgumentNullException(nameof(actionStep));
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
 
             string tdilPattern = actionStep.TdilPattern;
             string result = tdilPattern;
 
-            IReferableInstruction referableInstruction = actionStep as IReferableInstruction;
-            if (referableInstruction != null) {
+            if (actionStep is IReferableInstruction referableInstruction) {
                 string resultReference = referableInstruction.ResultReferencePattern;
                 resultReference = resultReference.Replace("#", "1");
-                result = string.Format("{0} = {1}", resultReference, result);
+                result = $"{resultReference} = {result}";
             }
 
             // Process all parameter references
@@ -65,19 +64,18 @@ namespace Bumblebee.buddy.compiler {
                     string pureParamName = pureParamNames[i];
                     string reducedParamName = pureParamName.Split('.')[0];
                     if (parameters.TryGetValue(reducedParamName, out patternParameter)) {
-                        parameterValueFunction = string.Format("${0}", pureParamName);
+                        parameterValueFunction = $"${pureParamName}";
                         break;
                     }
                 }
 
                 // Do we have one?
                 if (patternParameter == null)
-                    throw new InstructionFormattingException(string.Format("The TDIL pattern '{0}' contains a mandatory parameter '{1}' that could not be resolved!",
-                        tdilPattern, parameterExpression));
+                    throw new InstructionFormattingException($"The TDIL pattern '{tdilPattern}' contains a mandatory parameter '{parameterExpression}' that could not be resolved!");
 
                 // Calculate value
                 string valueStr = patternParameter.EvaluateExpression(parameterValueFunction);
-                if (valueStr == null) throw new InstructionFormattingException(string.Format("Expression '{0}' could not be evaluated by pattern parameter of '{1}'", parameterExpression, patternParameter));
+                if (valueStr == null) throw new InstructionFormattingException($"Expression '{parameterExpression}' could not be evaluated by pattern parameter of '{patternParameter}'");
 
                 // Insert and replace
                 result = result.Replace(parameterExpression, valueStr);
@@ -85,8 +83,7 @@ namespace Bumblebee.buddy.compiler {
 
             // Ensure all parameters have been replaced
             if (result.Contains('~')) 
-                throw new InstructionFormattingException(string.Format("At least one parameter could not be set. Pattern is '{0}'. Result is '{1}'.", 
-                    tdilPattern, result));
+                throw new InstructionFormattingException($"At least one parameter could not be set. Pattern is '{tdilPattern}'. Result is '{result}'.");
 
             return result;
         }

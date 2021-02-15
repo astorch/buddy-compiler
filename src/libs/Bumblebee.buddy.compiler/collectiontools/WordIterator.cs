@@ -4,36 +4,31 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Bumblebee.buddy.compiler.collectiontools {
-    /// <summary>
-    /// Implements an <see cref="IEnumerator{T}"/> to iterate all words of a string.
-    /// </summary>
+    /// <summary> Implements an <see cref="IEnumerator{T}"/> to iterate all words of a string. </summary>
     public class WordIterator : IEnumerator<WordIterator.Word> {
-        private string iStringData;
-        private readonly StringBuilder iWordStringBuilder = new StringBuilder();
+        private string _stringData;
+        private readonly StringBuilder _wordStringBuilder = new StringBuilder();
 
-        /// <summary>
-        /// Initialisiert eine neue Instanz der <see cref="T:System.Object"/>-Klasse.
-        /// </summary>
+        /// <summary> Initializes the new instance and binds it to the given <paramref name="stringData"/>. </summary>
+        /// <exception cref="ArgumentNullException">When <paramref name="stringData"/> is NULL.</exception>
         public WordIterator(string stringData) {
-            if (stringData == null) throw new ArgumentNullException("stringData");
-            iStringData = stringData;
+            _stringData = stringData ?? throw new ArgumentNullException(nameof(stringData));
             CursorIndex = 0;
         }
-
-        /// <inheritdoc />
-        object IEnumerator.Current {
-            get { return Current; }
-        }
-
-        /// <summary>Gets the element in the collection at the current position of the enumerator.</summary>
-        /// <returns>The element in the collection at the current position of the enumerator.</returns>
-        public Word Current { get; private set; }
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         /// <filterpriority>2</filterpriority>
         public void Dispose() {
             // Currently nothing to do here
         }
+
+        /// <inheritdoc />
+        object IEnumerator.Current 
+            => Current;
+
+        /// <summary>Gets the element in the collection at the current position of the enumerator.</summary>
+        /// <returns>The element in the collection at the current position of the enumerator.</returns>
+        public Word Current { get; private set; }
 
         /// <summary>Advances the enumerator to the next element of the collection.</summary>
         /// <returns>true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.</returns>
@@ -60,16 +55,15 @@ namespace Bumblebee.buddy.compiler.collectiontools {
         /// <summary>
         /// Returns TRUE if the cursor can move to a next word.
         /// </summary>
-        private bool CanMoveNext {
-            get { return CursorIndex < iStringData.Length; }
-        }
+        private bool CanMoveNext 
+            => CursorIndex < _stringData.Length;
 
         /// <summary>
         /// Returns the next word based on the current cursor index.
         /// </summary>
         /// <returns>Next word or NULL</returns>
         private Word NextWord() {
-            iWordStringBuilder.Clear();
+            _wordStringBuilder.Clear();
 
             int begin = CursorIndex;
             
@@ -77,7 +71,7 @@ namespace Bumblebee.buddy.compiler.collectiontools {
             char escapeExitChar = default(char);
 
             while (CanMoveNext) {
-                char c = iStringData[CursorIndex++];
+                char c = _stringData[CursorIndex++];
                 if (c == '\r') continue; // Ignore
 
                 // Check for exit
@@ -86,7 +80,7 @@ namespace Bumblebee.buddy.compiler.collectiontools {
                 } else {
                     // Check for word finalizer
                     if (c == ' ' || c == '.' || c == ',' || c == '\n') {
-                        string word = iWordStringBuilder.ToString();
+                        string word = _wordStringBuilder.ToString();
                         if (string.IsNullOrEmpty(word)) continue;
                         Word wordObj = new Word(this, word, begin, CursorIndex - 1);
                         return wordObj;
@@ -99,7 +93,7 @@ namespace Bumblebee.buddy.compiler.collectiontools {
                     }
                 }
 
-                iWordStringBuilder.Append(c);
+                _wordStringBuilder.Append(c);
             }
 
             return null;
@@ -124,7 +118,7 @@ namespace Bumblebee.buddy.compiler.collectiontools {
             if (word == null) return;
 
             string originalWord = word.Text;
-            iStringData = ReplaceFirst(iStringData, originalWord, value, word.Begin);
+            _stringData = ReplaceFirst(_stringData, originalWord, value, word.Begin);
             int newCursorIndex = word.Begin + value.Length;
             CursorIndex = newCursorIndex;
         }
@@ -153,7 +147,7 @@ namespace Bumblebee.buddy.compiler.collectiontools {
             if (word == null) return;
 
             string originalWord = word.Text;
-            iStringData = RemoveFirst(iStringData, originalWord, word.Begin);
+            _stringData = RemoveFirst(_stringData, originalWord, word.Begin);
             int newCursorIndex = word.Begin;
             CursorIndex = newCursorIndex;
         }
@@ -185,24 +179,22 @@ namespace Bumblebee.buddy.compiler.collectiontools {
         /// </summary>
         /// <returns>Underlying string data</returns>
         public string GetStringData() {
-            return iStringData;
+            return _stringData;
         }
 
         /// <summary>
         /// Describes a word within a string.
         /// </summary>
         public class Word {
-            private readonly WordIterator iWordIterator;
+            private readonly WordIterator _wordIterator;
 
-            /// <summary>
-            /// Creates a new instance.
-            /// </summary>
+            /// <summary> Creates a new instance. </summary>
             /// <param name="wordIterator">Associated word iterator</param>
             /// <param name="text">Word text</param>
             /// <param name="begin">Begin index of the word</param>
             /// <param name="end">End index of the word</param>
             public Word(WordIterator wordIterator, string text, int begin, int end) {
-                iWordIterator = wordIterator;
+                _wordIterator = wordIterator;
                 Text = text;
                 Begin = begin;
                 End = end;
@@ -211,31 +203,31 @@ namespace Bumblebee.buddy.compiler.collectiontools {
             /// <summary>
             /// Returns the text of the word.
             /// </summary>
-            public string Text { get; private set; }
+            public string Text { get; }
 
             /// <summary>
             /// Returns the begin index of the word.
             /// </summary>
-            public int Begin { get; private set; }
+            public int Begin { get; }
 
             /// <summary>
             /// Returns the end index of the word.
             /// </summary>
-            public int End { get; private set; }
+            public int End { get; }
 
             /// <summary>
             /// Replaces the word within the underlying string with the given <paramref name="value"/>.
             /// </summary>
             /// <param name="value">Value to set instead</param>
             public void Replace(string value) {
-                iWordIterator.Replace(this, value);
+                _wordIterator.Replace(this, value);
             }
 
             /// <summary>
             /// Removes the word from the underlying string.
             /// </summary>
             public void Remove() {
-                iWordIterator.Remove(this);
+                _wordIterator.Remove(this);
             }
         }   
     }
