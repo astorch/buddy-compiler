@@ -9,19 +9,19 @@ namespace Bumblebee.buddy.compiler.tests.packaging {
     [TestFixture]
     public class UnitBundlerTests {
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [Test]
         public void Ctor_ArgumentNullException() {
-            new UnitBundler(null);
+            Assert.Throws<ArgumentNullException>(() => new UnitBundler(null));
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [Test]
         public void Bundle_ArgumentNullException() {
-            new UnitBundler(new _ImportPathProvider()).Bundle(null);
+            Assert.Throws<ArgumentNullException>(() => new UnitBundler(new _ImportPathProvider()).Bundle(null));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void Bundle_ArgumentException() {
-            new UnitBundler(new _ImportPathProvider()).Bundle(new FileInfo("noway.out"));
+            Assert.Throws<ArgumentException>(() => new UnitBundler(new _ImportPathProvider()).Bundle(new FileInfo("noway.out")));
         }
 
         [Test]

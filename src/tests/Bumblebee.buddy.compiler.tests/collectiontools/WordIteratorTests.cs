@@ -7,13 +7,13 @@ namespace Bumblebee.buddy.compiler.tests.collectiontools {
     [TestFixture]
     public class WordIteratorTests {
 
-        [Test, TestCaseSource(typeof(TestCaseFactory), "TestCasesWords")]
+        [Test, TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCasesWords))]
         public IEnumerable<string> Words(string text) {
             return new WordIterator(text).Words().Select(wrd => wrd.Text);
         }
 
         class TestCaseFactory {
-            public IEnumerable<TestCaseData> TestCasesWords {
+            public static IEnumerable<TestCaseData> TestCasesWords {
                 get {
                     yield return new TestCaseData("Starte Anwendung.")
                         .Returns(new[] {"Starte", "Anwendung"});

@@ -9,7 +9,12 @@ namespace Bumblebee.buddy.compiler.tests.model.instructions.german {
     [TestFixture]
     public class CloseInstructionTests {
 
-        [Test, TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.ThrowCases))]
+        public void Evaluate_Throws(string instruction, Type expectedType) {
+            Assert.Throws(expectedType, () => Evaluate(instruction));
+        }
+        
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public IInstructionEvaluationResult Evaluate(string instruction) {
             return new InstructionEvaluator().Evaluate(instruction,
                 new InstructionTranslationInfo(new CloseBuddyTranslationInstruction()),
@@ -17,18 +22,24 @@ namespace Bumblebee.buddy.compiler.tests.model.instructions.german {
         }
 
         class TestCaseFactory {
-            public IEnumerable<TestCaseData> TestCases {
+
+            public static IEnumerable<TestCaseData> ThrowCases {
+                get {
+                    yield return new TestCaseData((string) null, typeof(ArgumentNullException));
+                    yield return new TestCaseData(string.Empty, typeof(ArgumentNullException));
+                }
+            }
+            
+            public static IEnumerable<TestCaseData> TestCases {
                 get {
                     yield return new TestCaseData("Schließe Fenster.").Returns(EvaluationResult.Ok);
                     yield return new TestCaseData("Schließe Anwendung.").Returns(EvaluationResult.Ok);
-
-                    yield return new TestCaseData((string) null).Throws(typeof(ArgumentNullException));
-                    yield return new TestCaseData(string.Empty).Throws(typeof(ArgumentNullException));
 
                     yield return new TestCaseData("Schließe ").Returns(new _ErrorEvaluationResult("2nd word of instruction does not match expected token 'Parameter reference 'ref' (keyword)'. Word is '⌜'"));
                     yield return new TestCaseData("Schließe <Anwendung.").Returns(new _ErrorEvaluationResult("2nd word of instruction does not match expected token 'Parameter reference 'ref' (keyword)'. Word is '<'"));
                 }
             }
+            
         }
     }
 }

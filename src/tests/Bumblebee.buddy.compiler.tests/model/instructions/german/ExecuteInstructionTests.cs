@@ -8,7 +8,13 @@ using NUnit.Framework;
 namespace Bumblebee.buddy.compiler.tests.model.instructions.german {
     [TestFixture]
     public class ExecuteInstructionTests {
-        [Test, TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.ThrowCases))]
+        public void Evaluate_Throws(string instruction, Type expectedType) {
+            Assert.Throws(expectedType, () => Evaluate(instruction));
+        }
+        
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public IInstructionEvaluationResult Evaluate(string instruction) {
             return new InstructionEvaluator().Evaluate(instruction,
                 new InstructionTranslationInfo(new ExecuteBuddyTranslationInstruction()),
@@ -16,7 +22,15 @@ namespace Bumblebee.buddy.compiler.tests.model.instructions.german {
         }
 
         class TestCaseFactory {
-            public IEnumerable<TestCaseData> TestCases {
+
+            public static IEnumerable<TestCaseData> ThrowCases {
+                get {
+                    yield return new TestCaseData((string) null, typeof(ArgumentNullException));
+                    yield return new TestCaseData(string.Empty, typeof(ArgumentNullException));
+                }
+            }
+            
+            public static IEnumerable<TestCaseData> TestCases {
                 get {
                     yield return new TestCaseData("Führe [Meine Daten bearbeiten] aus.").Returns(EvaluationResult.Ok);
                     yield return new TestCaseData("Führe [Anmeldung] aus.").Returns(EvaluationResult.Ok);
@@ -25,13 +39,11 @@ namespace Bumblebee.buddy.compiler.tests.model.instructions.german {
                     yield return new TestCaseData("Führe [Daten zurücksetzen] (\"Administrator\") aus.").Returns(EvaluationResult.Ok);
                     yield return new TestCaseData("Führe [Daten zurücksetzen] ($category) aus.").Returns(EvaluationResult.Ok);
 
-                    yield return new TestCaseData((string)null).Throws(typeof(ArgumentNullException));
-                    yield return new TestCaseData(string.Empty).Throws(typeof(ArgumentNullException));
-
                     yield return new TestCaseData("Führe <Meine Daten> aus.").Returns(new _ErrorEvaluationResult("2nd word of instruction does not match expected token '['. Word is '<'"));
                     yield return new TestCaseData("Tue [Meine Daten] ausführen.").Returns(new _ErrorEvaluationResult("1st word of instruction does not match expected token 'Führe'. Word is 'Tue'"));
                 }
             }
+            
         }
     }
 }

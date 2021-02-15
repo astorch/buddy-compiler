@@ -5,13 +5,13 @@ using NUnit.Framework;
 namespace Bumblebee.buddy.compiler.tests.collectiontools {
     [TestFixture]
     public class StringExtensionMethodsTests {
-        [Test, TestCaseSource(typeof(TestCaseFactory), "TestCaseTexts")]
+        [Test, TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCaseTexts))]
         public string[] SplitToBuddyTokens(string text) {
             return text.SplitToBuddyTokens();
         }
 
         class TestCaseFactory {
-            public IEnumerable<TestCaseData> TestCaseTexts {
+            public static IEnumerable<TestCaseData> TestCaseTexts {
                 get {
                     yield return new TestCaseData("Führe [Login] (\"001\", \"Passw001\", \"0001-00\") aus")
                         .Returns(new[] { "Führe", "[Login]", "(\"001\", \"Passw001\", \"0001-00\")", "aus" });

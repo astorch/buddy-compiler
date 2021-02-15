@@ -5,14 +5,14 @@ using NUnit.Framework;
 namespace Bumblebee.buddy.compiler.tests.packaging {
     [TestFixture]
     public class UnitRoutineInfoTests {
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [Test]
         public void ParseFromFile_ArgumentNullException_on_NULL() {
-            UnitRoutineInfo.ParseFromFile(null);
+            Assert.Throws<ArgumentNullException>(() => UnitRoutineInfo.ParseFromFile(null));
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [Test]
         public void ParseFromFile_ArgumentNullException_on_empty() {
-            UnitRoutineInfo.ParseFromFile(string.Empty);
+            Assert.Throws<ArgumentNullException>(() => UnitRoutineInfo.ParseFromFile(string.Empty));
         }
 
         [Test]

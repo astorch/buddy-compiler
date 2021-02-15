@@ -9,23 +9,24 @@ using NUnit.Framework;
 namespace Bumblebee.buddy.compiler.tests {
     [TestFixture]
     public class InstructionFormatterTests {
+
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.ThrowCases))]
+        public void ToString_Throws(
+            IBuddyTranslationInstruction translationInstruction, IDictionary<string, IPatternParameter> parameters,
+            Type expectedType
+        ) {
+            Assert.Throws(expectedType, () => ToString(translationInstruction, parameters));
+        }
         
-        [Test, TestCaseSource(typeof(TestCaseFactory))]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public string ToString(IBuddyTranslationInstruction translationInstruction, IDictionary<string, IPatternParameter> parameters) {
             InstructionFormatter instructionFormatter = new InstructionFormatter();
             return instructionFormatter.ToString(translationInstruction, parameters);
         }
 
-        class TestCaseFactory : IEnumerable {
-            public IEnumerator GetEnumerator() {
-                yield return new TestCaseData(null, null)
-                        .SetName("ArgumentNullException for instruction")
-                        .Throws(typeof(ArgumentNullException));
-
-                    yield return new TestCaseData(new WaitBuddyTranslationInstruction(), null)
-                        .SetName("ArgumentNullException for parameters")
-                        .Throws(typeof(ArgumentNullException));
-
+        class TestCaseFactory {
+            public static IEnumerable TestCases {
+                get {
                     // Assert
                     yield return new TestCaseData(new AssertBuddyTranslationInstruction(), MapToParameters(new List<TestParamInfo> {
                         new TestParamInfo {Name = "alias", Type = "alias", Value = "TextBox:Name"},
@@ -188,6 +189,14 @@ namespace Bumblebee.buddy.compiler.tests {
                         new TestParamInfo {Name = "kind", Type = "frequence", Value = "doppelt"}
                     })).SetName("press key double, combined")
                        .Returns("pressKey(, KeyType, \"STRG+SHIFT+S\", Double)");
+                }
+            }
+
+            public static IEnumerable ThrowCases {
+                get {
+                    yield return new TestCaseData(null, null, typeof(ArgumentNullException));
+                    yield return new TestCaseData(new WaitBuddyTranslationInstruction(), null, typeof(ArgumentNullException));
+                }
             }
 
             private static IDictionary<string, IPatternParameter> MapToParameters(IList<TestParamInfo> parameters) {

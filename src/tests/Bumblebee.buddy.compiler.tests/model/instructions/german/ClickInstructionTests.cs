@@ -9,7 +9,12 @@ namespace Bumblebee.buddy.compiler.tests.model.instructions.german {
     [TestFixture]
     public class ClickInstructionTests {
 
-        [Test, TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.ThrowCases))]
+        public void Evaluate_Throws(string instruction, Type expectedType) {
+            Assert.Throws(expectedType, () => Evaluate(instruction));
+        }
+        
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public IInstructionEvaluationResult Evaluate(string instruction) {
             return new InstructionEvaluator().Evaluate(instruction,
                 new InstructionTranslationInfo(new ClickBuddyTranslationInstruction()),
@@ -17,14 +22,19 @@ namespace Bumblebee.buddy.compiler.tests.model.instructions.german {
         }
 
         class TestCaseFactory {
+
+            public static IEnumerable<TestCaseData> ThrowCases {
+                get {
+                    yield return new TestCaseData((string) null, typeof(ArgumentNullException));
+                    yield return new TestCaseData(string.Empty, typeof(ArgumentNullException));
+                }
+            }
+            
             public static IEnumerable<TestCaseData> TestCases {
                 get {
                     yield return new TestCaseData("Klicke <Button:Anmelden> einfach.").Returns(EvaluationResult.Ok);
                     yield return new TestCaseData("Klicke <Button:Anmelden> doppelt.").Returns(EvaluationResult.Ok);
                     yield return new TestCaseData("Klicke <Button:Anmelden>.").Returns(EvaluationResult.Ok);
-
-                    yield return new TestCaseData((string)null).Throws(typeof(ArgumentNullException));
-                    yield return new TestCaseData(string.Empty).Throws(typeof(ArgumentNullException));
 
                     yield return new TestCaseData("Klicke Boutton.").Returns(new _ErrorEvaluationResult("2nd word of instruction does not match expected token '<'. Word is 'Boutton'"));
                 }

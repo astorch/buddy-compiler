@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Bumblebee.buddy.compiler.model;
 using Bumblebee.buddy.compiler.model.instructions.german;
@@ -8,12 +9,17 @@ namespace Bumblebee.buddy.compiler.tests {
     [TestFixture]
     public class InstructionTranslatorTests {
 
-        [Test, TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCasesGetTranslationInstruction))]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.ThrowCases))]
+        public void GetTranslationInstruction_Throws(string instruction, Type expectedType) {
+            Assert.Throws(expectedType, () => GetTranslationInstruction(instruction));
+        }
+        
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCasesGetTranslationInstruction))]
         public IBuddyTranslationInstruction GetTranslationInstruction(string instruction) {
             return new InstructionTranslator().GetTranslationInstruction(instruction);
         }
 
-        [Test, TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCasesToDirective))]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCasesToDirective))]
         public string ToDirective(string line) {
             InstructionTranslator instructionTranslator = new InstructionTranslator();
             string directive = instructionTranslator.ToDirective(line);
@@ -21,7 +27,7 @@ namespace Bumblebee.buddy.compiler.tests {
         }
 
         class TestCaseFactory {
-            public IEnumerable<TestCaseData> TestCasesToDirective {
+            public static IEnumerable<TestCaseData> TestCasesToDirective {
                 get {
                     yield return new TestCaseData(@"Starte ""C:\EGUB\EGUB.exe"".").Returns(@"processHandle1 = start(,, ""C:\EGUB\EGUB.exe"")");
                     yield return new TestCaseData(@"Wechsle ""HIT"".").Returns(@"setsut(,, ""HIT"")");
@@ -34,15 +40,19 @@ namespace Bumblebee.buddy.compiler.tests {
                 }
             }
 
-            public IEnumerable<TestCaseData> TestCasesGetTranslationInstruction {
+            public static IEnumerable<TestCaseData> TestCasesGetTranslationInstruction {
                 get {
                     yield return new TestCaseData("Wähle aus der Mehrzahl aus").Returns(new InstanceOfResult<SelectBuddyTranslationInstruction>());
                     yield return new TestCaseData("Rutsche auf und davon").Returns(null);
                     yield return new TestCaseData(" was geht ab").Returns(null);
-
-                    yield return new TestCaseData(null).Throws(typeof(ArgumentNullException));
                 }
-            } 
+            }
+
+            public static IEnumerable<TestCaseData> ThrowCases {
+                get {
+                    yield return new TestCaseData(null, typeof(ArgumentNullException));
+                }
+            }
         }
 
         class InstanceOfResult<TResultObject> where TResultObject : class, IBuddyTranslationInstruction {
@@ -55,5 +65,6 @@ namespace Bumblebee.buddy.compiler.tests {
                 return true;
             }
         }
+        
     }
 }
