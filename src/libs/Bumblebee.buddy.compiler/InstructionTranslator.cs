@@ -13,14 +13,12 @@ namespace Bumblebee.buddy.compiler {
     /// Provides methods to map action line strings to processable action steps which will be converted into TDIL directives.
     /// </summary>
     public class InstructionTranslator {
-        private readonly Dictionary<IBuddyTranslationInstruction, InstructionTranslationInfo> iInstructionTable = new Dictionary<IBuddyTranslationInstruction, InstructionTranslationInfo>(20);
+        private readonly Dictionary<IBuddyTranslationInstruction, InstructionTranslationInfo> instructionTable = new Dictionary<IBuddyTranslationInstruction, InstructionTranslationInfo>(20);
 
-        private readonly InstructionFormatter iInstructionFormatter = new InstructionFormatter();
-        private readonly InstructionEvaluator iInstructionEvaluator = new InstructionEvaluator();
+        private readonly InstructionFormatter _instructionFormatter = new InstructionFormatter();
+        private readonly InstructionEvaluator _instructionEvaluator = new InstructionEvaluator();
 
-        /// <summary>
-        /// Creates a new instance.
-        /// </summary>
+        /// <summary> Creates a new instance. </summary>
         public InstructionTranslator() {
             // TODO Remove workaround
             AddTranslationInstruction(new AssertBuddyTranslationInstruction());
@@ -35,16 +33,14 @@ namespace Bumblebee.buddy.compiler {
             AddTranslationInstruction(new PressBuddyTranslationInstruction());
         }
 
-        /// <summary>
-        /// Adds the given <paramref name="instruction"/> to the translator.
-        /// </summary>
+        /// <summary> Adds the given <paramref name="instruction"/> to the translator. </summary>
         /// <param name="instruction">Instruction to add</param>
         /// <exception cref="ArgumentNullException">If <paramref name="instruction"/> is null</exception>
         /// <exception cref="InvalidInstructionTranslationPatternException">If the <paramref name="instruction"/> declares an invalid instruction pattern</exception>
         public void AddTranslationInstruction(IBuddyTranslationInstruction instruction) {
             Assert.NotNull(() => instruction);
             InstructionTranslationInfo instructionInfo = new InstructionTranslationInfo(instruction);
-            iInstructionTable.Add(instruction, instructionInfo);
+            instructionTable.Add(instruction, instructionInfo);
         }
 
         /// <summary>
@@ -61,7 +57,7 @@ namespace Bumblebee.buddy.compiler {
             string leadingWord = instructionWords.FirstOrDefault();
             if (leadingWord == null) throw new BuddyLanguageFormatException("Given instruction must start with a commanding word!");
 
-            IBuddyTranslationInstruction actionStep = iInstructionTable.FirstOrDefault(entry => entry.Key.InstructionId == leadingWord).Key;
+            IBuddyTranslationInstruction actionStep = instructionTable.FirstOrDefault(entry => entry.Key.InstructionId == leadingWord).Key;
             return actionStep;
         }
 
@@ -74,19 +70,19 @@ namespace Bumblebee.buddy.compiler {
         /// <returns>TDIL directive</returns>
         /// <exception cref="ArgumentNullException">If any argument is NULL</exception>
         public string ToDirective(string instruction, IBuddyTranslationInstruction translationInstruction) {
-            if (string.IsNullOrEmpty(instruction)) throw new ArgumentNullException("instruction");
-            if (translationInstruction == null) throw new ArgumentNullException("translationInstruction");
+            if (string.IsNullOrEmpty(instruction)) throw new ArgumentNullException(nameof(instruction));
+            if (translationInstruction == null) throw new ArgumentNullException(nameof(translationInstruction));
 
             using (ParameterAdjustmentTable pat = ParameterAdjustmentTable.Create()) {
                 string processedInstruction = pat.Process(instruction);
 
                 Dictionary<string, IPatternParameter> paramCache = new Dictionary<string, IPatternParameter>();
-                IInstructionEvaluationResult evaRslt = iInstructionEvaluator.Evaluate(processedInstruction, iInstructionTable[translationInstruction], paramCache);
+                IInstructionEvaluationResult evaRslt = _instructionEvaluator.Evaluate(processedInstruction, instructionTable[translationInstruction], paramCache);
                 if (evaRslt.IsError) {
                     // TODO
                 }
 
-                string result = iInstructionFormatter.ToString(translationInstruction, paramCache);
+                string result = _instructionFormatter.ToString(translationInstruction, paramCache);
                 return result;
             } 
         }
@@ -101,7 +97,7 @@ namespace Bumblebee.buddy.compiler {
         public string ToDirective(string instruction) {
             IBuddyTranslationInstruction translationInstruction = GetTranslationInstruction(instruction);
             if (translationInstruction == null)
-                throw new UnknownTranslationInstructionException(string.Format("Cannot map the given line '{0}' to an action step", instruction));
+                throw new UnknownTranslationInstructionException($"Cannot map the given line '{instruction}' to an action step");
 
             return ToDirective(instruction, translationInstruction);
         }
