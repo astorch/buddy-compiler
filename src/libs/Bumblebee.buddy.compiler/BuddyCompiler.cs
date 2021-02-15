@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Bumblebee.buddy.compiler.collectiontools;
 using Bumblebee.buddy.compiler.exceptions;
@@ -9,9 +10,7 @@ using Bumblebee.buddy.compiler.writers;
 using xcite.csharp.diagnostics;
 
 namespace Bumblebee.buddy.compiler {
-    /// <summary>
-    /// Implements a compiler for the buddy language.
-    /// </summary>
+    /// <summary> Implements a compiler for the buddy language. </summary>
     public class BuddyCompiler {
         private readonly BuddyTextProcessor _buddyTextProcessor;
         private readonly InstructionTranslator _instructionTranslator;
@@ -276,14 +275,15 @@ namespace Bumblebee.buddy.compiler {
             return buddyText;
         }
 
-        /// <summary>
-        /// Strips standard articles from the given <paramref name="buddyText"/>.
-        /// </summary>
+        /// <summary> Strips standard articles from the given <paramref name="buddyText"/>. </summary>
         /// <param name="buddyText">Buddy text to process</param>
         /// <returns><paramref name="buddyText"/> without articles</returns>
         public virtual string StripArticles(string buddyText) {
             // Articles to remove
-            string[] articles = {"der", "die", "das", "den", "dem"};
+            HashSet<string> articles = new HashSet<string>(
+                new[] {"der", "die", "das", "den", "dem", "ein", "eine"},
+                StringComparer.InvariantCultureIgnoreCase
+            );
 
             string strippedBuddyText = buddyText;
             for (WordIterator itr = buddyText.GetWordIterator(); itr.MoveNext();) {
@@ -291,10 +291,7 @@ namespace Bumblebee.buddy.compiler {
                 if (word == null) break;
 
                 // Check if the word is an article
-                string wordText = word.Text;
-                bool isArticle = Array.FindIndex(articles,
-                                     item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase)) != -1;
-                if (!isArticle) continue;
+                if (!articles.Contains(word.Text)) continue;
                 word.Remove();
 
                 // Update return value
@@ -304,25 +301,23 @@ namespace Bumblebee.buddy.compiler {
             return strippedBuddyText;
         }
 
-        /// <summary>
-        /// Strips standard prepositions from the given <paramref name="buddyText"/>.
-        /// </summary>
+        /// <summary> Strips standard prepositions from the given <paramref name="buddyText"/>. </summary>
         /// <param name="buddyText">Buddy text to process</param>
         /// <returns><paramref name="buddyText"/> without articles</returns>
         public virtual string StripPrepositions(string buddyText) {
             // Prepositions to remove
-            string[] prepositions = {"in", "im", "aus", "ein", "ob", "bis", "auf", "zu"};
-
+            HashSet<string> prepositions = new HashSet<string>(
+                new[] {"in", "im", "aus", "ein", "ob", "bis", "auf", "zu", "unter"},
+                StringComparer.InvariantCultureIgnoreCase
+            );
+            
             string strippedBuddyText = buddyText;
             for (WordIterator itr = buddyText.GetWordIterator(); itr.MoveNext();) {
                 WordIterator.Word word = itr.Current;
                 if (word == null) break;
 
                 // Check if the word is an preposition
-                string wordText = word.Text;
-                bool isPreposition = Array.FindIndex(prepositions,
-                                         item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase)) != -1; 
-                if (!isPreposition) continue;
+                if (!prepositions.Contains(word.Text)) continue;
                 word.Remove();
 
                 // Update return value
@@ -332,14 +327,15 @@ namespace Bumblebee.buddy.compiler {
             return strippedBuddyText;
         }
 
-        /// <summary>
-        /// Strips standard auxiliary verbs from the given <paramref name="buddyText"/>.
-        /// </summary>
+        /// <summary> Strips standard auxiliary verbs from the given <paramref name="buddyText"/>. </summary>
         /// <param name="buddyText">Buddy text to process</param>
         /// <returns><paramref name="buddyText"/> without auxiliary verbs</returns>
         public virtual string StripAuxiliaryVerbs(string buddyText) {
             // Auxiliary verbs to remove
-            string[] auxiliaryVerbs = {"ist"};
+            HashSet<string> auxiliaryVerbs = new HashSet<string>(
+                new[] {"ist"},
+                StringComparer.InvariantCultureIgnoreCase
+            );
 
             string strippedBuddyText = buddyText;
             for (WordIterator itr = buddyText.GetWordIterator(); itr.MoveNext();) {
@@ -347,10 +343,7 @@ namespace Bumblebee.buddy.compiler {
                 if (word == null) break;
 
                 // Check if the word is an preposition
-                string wordText = word.Text;
-                bool isAuxiliaryVerb = Array.FindIndex(auxiliaryVerbs,
-                                           item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase)) != -1; 
-                if (!isAuxiliaryVerb) continue;
+                if (!auxiliaryVerbs.Contains(word.Text)) continue;
                 word.Remove();
 
                 // Update return value
@@ -360,14 +353,20 @@ namespace Bumblebee.buddy.compiler {
             return strippedBuddyText;
         }
 
-        /// <summary>
-        /// Strips typically unneeded substantives from the given <paramref name="buddyText"/>.
-        /// </summary>
+        /// <summary> Strips typically unneeded substantives from the given <paramref name="buddyText"/>. </summary>
         /// <param name="buddyText">Buddy text to process</param>
         /// <returns><paramref name="buddyText"/> without substantives</returns>
         public virtual string StripSubstantives(string buddyText) { // TODO Add unit test
             // Substantives to remove
-            string[] substantives = {"Wert", "Button", "Schaltfläche", "Navigation"};
+            HashSet<string> substantives = new HashSet<string>(
+                new[] {
+                    "Wert", "Button", "Schaltfläche", "Navigation", "Spalte", "Auswahlbox",
+                    
+                    // GTUE-related -> Remove all upper-case words?
+                    "Kennzeichen"
+                },
+                StringComparer.CurrentCultureIgnoreCase
+            );
 
             string strippedBuddyText = buddyText;
             for (WordIterator itr = buddyText.GetWordIterator(); itr.MoveNext(); ) {
@@ -375,10 +374,7 @@ namespace Bumblebee.buddy.compiler {
                 if (word == null) break;
 
                 // Check if the word is an preposition
-                string wordText = word.Text;
-                bool isAuxiliaryVerb = Array.FindIndex(substantives,
-                                           item => string.Equals(item, wordText, StringComparison.InvariantCultureIgnoreCase)) != -1;
-                if (!isAuxiliaryVerb) continue;
+                if (!substantives.Contains(word.Text)) continue;
                 word.Remove();
 
                 // Update return value
@@ -388,9 +384,7 @@ namespace Bumblebee.buddy.compiler {
             return strippedBuddyText;
         }
 
-        /// <summary>
-        /// Strips punctuation marks from the given <paramref name="buddyText"/>.
-        /// </summary>
+        /// <summary> Strips punctuation marks from the given <paramref name="buddyText"/>. </summary>
         /// <param name="buddyText">Buddy text to process</param>
         /// <returns><paramref name="buddyText"/> without punctuation marks</returns>
         public virtual string StripPunctuationMarks(string buddyText) {
@@ -400,9 +394,7 @@ namespace Bumblebee.buddy.compiler {
             return strippedBuddyText;
         }
 
-        /// <summary>
-        /// Replaces all known synonyms of action pattern key words with their base form.
-        /// </summary>
+        /// <summary> Replaces all known synonyms of action pattern key words with their base form. </summary>
         /// <param name="buddyText">Buddy text to process</param>
         /// <returns>Unambigiuous <paramref name="buddyText"/></returns>
         public virtual string ResolveAmbiguity(string buddyText) {
@@ -419,8 +411,7 @@ namespace Bumblebee.buddy.compiler {
                 string wordText = word.Text;
 
                 // Check for synonyms
-                string rootWord;
-                if (!synMapRegistry.TryGetRootWord(wordText, out rootWord)) continue;
+                if (!synMapRegistry.TryGetRootWord(wordText, out string rootWord)) continue;
                 word.Replace(rootWord);
 
                 // Update return value
@@ -438,8 +429,12 @@ namespace Bumblebee.buddy.compiler {
         private void LogBuddyTextProcessorPerformance(Stopwatch textProcessorStopwatch, object data) {
             BuddyTextInfo buddyTextInfo = (BuddyTextInfo)data;
 
-            Console.WriteLine("[BuddyCompiler] Text Processor duration: {0}ms ({1}s) - {2} LOS",
-                    textProcessorStopwatch.ElapsedMilliseconds, (textProcessorStopwatch.ElapsedMilliseconds / 1000), buddyTextInfo.Steps.Length);
+            Console.WriteLine(
+                "[BuddyCompiler] Text Processor duration: {0}ms ({1}s) - {2} LOS",
+                textProcessorStopwatch.ElapsedMilliseconds,
+                (textProcessorStopwatch.ElapsedMilliseconds / 1000),
+                buddyTextInfo.Steps.Length
+            );
         }
 
         /// <summary>
@@ -448,8 +443,11 @@ namespace Bumblebee.buddy.compiler {
         /// <param name="normalizingStopwatch">Stopwatch that measured the normalizing</param>
         /// <param name="data">Additional data object</param>
         private void LogNormalizingPerformance(Stopwatch normalizingStopwatch, object data) {
-            Console.WriteLine("[BuddyCompiler] Normalizing duration: {0}ms ({1}s)",
-                normalizingStopwatch.ElapsedMilliseconds, (normalizingStopwatch.ElapsedMilliseconds / 1000));
+            Console.WriteLine(
+                "[BuddyCompiler] Normalizing duration: {0}ms ({1}s)",
+                normalizingStopwatch.ElapsedMilliseconds,
+                normalizingStopwatch.ElapsedMilliseconds / 1000
+            );
         }
 
         /// <summary>
@@ -458,8 +456,11 @@ namespace Bumblebee.buddy.compiler {
         /// <param name="formatterStopwatch">Stopwatch that measured the instruction formatter</param>
         /// <param name="data">Additional data object</param>
         private void LogInstructionTranslationPerformance(Stopwatch formatterStopwatch, object data) {
-            Console.WriteLine("[BuddyCompiler] Instruction translation duration: {0}ms ({1}s)",
-                formatterStopwatch.ElapsedMilliseconds, (formatterStopwatch.ElapsedMilliseconds/1000));
+            Console.WriteLine(
+                "[BuddyCompiler] Instruction translation duration: {0}ms ({1}s)",
+                formatterStopwatch.ElapsedMilliseconds,
+                formatterStopwatch.ElapsedMilliseconds / 1000
+            );
         }
 
         /// <summary>
@@ -468,8 +469,11 @@ namespace Bumblebee.buddy.compiler {
         /// <param name="writerStopwatch">Stopwatch that measured the unit writer</param>
         /// <param name="data">Additional data object</param>
         private void LogTdilUnitWritingPerformance(Stopwatch writerStopwatch, object data) {
-            Console.WriteLine("[BuddyCompiler] Unit writing duration: {0}ms ({1}s)",
-                writerStopwatch.ElapsedMilliseconds, (writerStopwatch.ElapsedMilliseconds / 1000));
+            Console.WriteLine(
+                "[BuddyCompiler] Unit writing duration: {0}ms ({1}s)",
+                writerStopwatch.ElapsedMilliseconds,
+                writerStopwatch.ElapsedMilliseconds / 1000
+            );
         }
 
         /// <summary>
@@ -478,8 +482,11 @@ namespace Bumblebee.buddy.compiler {
         /// <param name="compilerStopwatch">Stopwatch that measured the compiler</param>
         /// <param name="data">Additional data object</param>
         private void LogCompilerPerformance(Stopwatch compilerStopwatch, object data) {
-            Console.WriteLine("[BuddyCompiler] Total duration: {0}ms ({1}s)",
-                    compilerStopwatch.ElapsedMilliseconds, (compilerStopwatch.ElapsedMilliseconds / 1000));
+            Console.WriteLine(
+                "[BuddyCompiler] Total duration: {0}ms ({1}s)",
+                compilerStopwatch.ElapsedMilliseconds,
+                compilerStopwatch.ElapsedMilliseconds / 1000
+            );
         }
 
         /// <summary>
@@ -519,7 +526,7 @@ namespace Bumblebee.buddy.compiler {
             for (int i = -1; ++i != unitReferenceSet.Length;) {
                 string unitReference = unitReferenceSet[i].Replace('_', ' ');
                 UnitName unitName = importPathProvider.GetUnitName(unitReference);
-                if (unitName == null) throw new BuddyCompilerException(string.Format("There is no unit registered for the given reference '{0}'", unitReference));
+                if (unitName == null) throw new BuddyCompilerException($"There is no unit registered for the given reference '{unitReference}'");
                 string qualifiedUnitName = unitName.ToQualifiedString();
                 qualifiedUnitNames[i] = qualifiedUnitName;
             }
@@ -532,9 +539,7 @@ namespace Bumblebee.buddy.compiler {
         /// throws an <see cref="BuddyCompilerException"/>.
         /// </summary>
         class NullImportPathProvider : IImportPathProvider {
-            /// <summary>
-            /// Returns the default instance of this class.
-            /// </summary>
+            /// <summary> Returns the default instance of this class. </summary>
             public static readonly IImportPathProvider Instance = new NullImportPathProvider();
 
             /// <inheritdoc />
