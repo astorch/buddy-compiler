@@ -32,10 +32,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Simplex, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\Simplex.1.0.1\lib\netstandard2.0\Simplex.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,10 +39,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xcite.csharp, Version=7.2.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\xcite.csharp.7.2.0\lib\netstandard2.0\xcite.csharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="exceptions\BuddyCompilerException.cs" />
@@ -78,7 +70,8 @@
     <EmbeddedResource Include="model\Buddy.gr" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <PackageReference Include="Simplex" Version="1.0.1" />
+    <PackageReference Include="xcite.csharp" Version="7.2.0" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

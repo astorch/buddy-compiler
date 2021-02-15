@@ -2,12 +2,11 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using Bumblebee.buddy.compiler;
+using CommandLine;
 using log4net;
 
 namespace bumblebee.buddy.compiler.host {
-    /// <summary>
-    /// Provides the entry point of the application.
-    /// </summary>
+    /// <summary> Provides the entry point of the application. </summary>
     public static class EntryPoint {
         /// <summary>
         /// Implements the main method of the application.
@@ -15,9 +14,11 @@ namespace bumblebee.buddy.compiler.host {
         /// <param name="args">Execution arguments</param>
         /// <returns>Execution result code</returns>
         public static int Main(string[] args) {
-            ExecutionArguments execArgs = new ExecutionArguments();
-            if (!CommandLine.Parser.Default.ParseArguments(args, execArgs)) return -1;
+            ParserResult<ExecutionArguments> parserResult = Parser.Default.ParseArguments<ExecutionArguments>(args);
+            if (!(parserResult is Parsed<ExecutionArguments> parsedResult)) return -1;
 
+            ExecutionArguments execArgs = parsedResult.Value;
+            
             ILog logWriter = LogManager.GetLogger("BLC");
             logWriter.InfoFormat("LogWriter initialized");
 
