@@ -417,7 +417,7 @@ namespace Bumblebee.buddy.compiler.tests {
                 .AppendLine("Starte \"C:\\EGUB\\EGUB.exe\".")
                 .AppendLine("Warte bis Fenster <WindowAnmeldung> sichtbar ist.")
                 .AppendLine("Wähle in <ListboxPinr> Wert \"000\" aus.")
-                .AppendLine("Setze in <TextboxPass> Wert \"Passw000\" ein.")
+                .AppendLine("Setze in <TextboxPass> Wert \"Passw000\".")
                 .AppendLine("Klicke Button <ButtonAnmelden> einfach.")
                 .AppendLine("Warte bis Fenster <MainWindowEgub> sichtbar ist.")
                 .AppendLine("Klicke Button <ButtonMainWindowClose> einfach.")
@@ -897,10 +897,75 @@ namespace Bumblebee.buddy.compiler.tests {
             Assert.AreEqual(expectedTdilText, compiledTdilText, "compiledTdilText");
         }
 
+        [Test]
+        public void Compile_Ok_VariousSubselects() {
+            // Arrange
+            StringBuilder buddyTextBuilder = new StringBuilder();
+            buddyTextBuilder
+                .AppendLine("Anwendung: Verwaltung")
+                .AppendLine()
+                .AppendLine("Anwendungsfall: Adressen")
+                .AppendLine()
+                .AppendLine("Szenario: Wildes Klicken")
+                .AppendLine("benutzt Verwaltung.s.Grundtest.Erfolgreiche_Anmeldung")
+                .AppendLine()
+                .AppendLine("Schritte:")
+                .AppendLine("Wähle in <Grid:Untersuchungsarten> unter \"HU gemäß §29\", in Spalte \"NU/NK\", eine \"Nachuntersuchung\" aus.")
+                .AppendLine("Klicke in <List:AuftraegeEgub> unter dem Kennzeichen \"*123*\", in der Spalte \"Mark\" auf die Auswahlbox einfach.")
+                .AppendLine("Klicke auf <Toolbar:Main> unter \"Neu\".")
+                ;
+
+            string buddyText = buddyTextBuilder.ToString();
+            
+            // Act
+            BuddyCompiler buddyCompiler = new BuddyCompiler {ImportPathProvider = new _ImportPathProviderImpl()};
+            DateTime now = DateTime.Now;
+            string compiledTdilText = buddyCompiler.Compile(buddyText);
+
+            // Assert
+            Assert.IsNotNull(compiledTdilText);
+            Assert.IsNotEmpty(compiledTdilText);
+            
+            StringBuilder expectedTdilTextBuilder = new StringBuilder();
+            expectedTdilTextBuilder
+                .AppendLine("// Compiler generated file")
+                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Generated on {date}")
+                .AppendLine()
+                .AppendLine("#alias \"Grid:Untersuchungsarten\"")
+                .AppendLine("#alias \"List:AuftraegeEgub\"")
+                .AppendLine("#alias \"Toolbar:Main\"")
+                .AppendLine()
+                .AppendLine("Unit Verwaltung.s.Adressen.Wildes_Klicken")
+                .AppendLine()
+                .AppendLine("Main:")
+                .AppendLine("start(,, \"{Verwaltung}\")")
+                .AppendLine("gosub Wildes_Klicken:")
+                .AppendLine("close(_Application,, Default)")
+                .AppendLine("kill(_Application,, 3000)")
+                .AppendLine("close(\"AcroRd32\",, Default)")
+                .AppendLine("kill(\"AcroRd32\",, 3000)")
+                .AppendLine("End")
+                .AppendLine()
+                .AppendLine("Wildes_Klicken:")
+                .AppendLine("select(Grid:Untersuchungsarten, Value, \"HU gemäß §29\", \"NU/NK\", \"Nachuntersuchung\")")
+                .AppendLine("click(List:AuftraegeEgub, , \"*123*\", \"Mark\", Single)")
+                .AppendLine("click(Toolbar:Main, , \"Neu\", Single)")
+                .AppendLine("End")
+                .AppendLine()
+                .AppendLine("End")
+                .AppendLine();
+
+            string expectedTdilText = expectedTdilTextBuilder.ToString();
+            expectedTdilText = expectedTdilText.Replace("{date}", now.ToString());
+
+            Assert.AreEqual(expectedTdilText, compiledTdilText, "compiledTdilText");
+        }
+
         class _ImportPathProviderImpl : IImportPathProvider {
             /// <inheritdoc />
             public string GetPath(UnitName unitName) {
-                return string.Format("test://{0}", unitName.ToQualifiedString());
+                return $"test://{unitName.ToQualifiedString()}";
             }
 
             /// <inheritdoc />
@@ -908,5 +973,6 @@ namespace Bumblebee.buddy.compiler.tests {
                 return new UnitName("test", "unkown", "none", scenarioName);
             }
         }
+        
     }
 }
