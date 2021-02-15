@@ -1,6 +1,7 @@
 ﻿namespace Bumblebee.buddy.compiler.model.instructions.german {
     /// <summary> Implements the <see cref="IBuddyTranslationInstruction"/> for the 'start' action. </summary>
     public class StartBuddyTranslationInstruction : AbstractBuddyTranslationInstruction, IReferableInstruction {
+        
         /// <inheritdoc />
         public override string InstructionId { get; } = "Starte";
 
@@ -12,5 +13,6 @@
         
         /// <inheritdoc />
         public string ResultReferencePattern { get; } = "processHandle#";
+        
     }
 }

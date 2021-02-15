@@ -3,19 +3,13 @@
     public class AssertBuddyTranslationInstruction : AbstractBuddyTranslationInstruction {
         
         /// <inheritdoc />
-        public override string InstructionId {
-            get { return "Prüfe"; }
-        }
-        
-        /// <inheritdoc />
-        public override string InstructionPattern {
-            get { return "Prüfe <{name:alias,type:alias}> {name:value,type:param,mandatory:false} {name:condition,type:condition}"; }
-        }
+        public override string InstructionId { get; } = "Prüfe";
 
         /// <inheritdoc />
-        public override string TdilPattern {
-            get { return "assert(~alias, ~condition.Name, ~(value|condition.Value))"; }
-        }
+        public override string InstructionPattern { get; } = "Prüfe <{name:alias,type:alias}> {name:value,type:param,mandatory:false} {name:condition,type:condition}";
+
+        /// <inheritdoc />
+        public override string TdilPattern { get; } = "assert(~alias, ~condition.Name, ~(value|condition.Value))";
         
     }
 }

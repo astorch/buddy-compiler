@@ -6,20 +6,15 @@ using Bumblebee.buddy.compiler.model.patternparameters.types;
 namespace Bumblebee.buddy.compiler.model.instructions.german {
     /// <summary> Implements <see cref="IBuddyTranslationInstruction"/> for the 'select' action. </summary>
     public class SelectBuddyTranslationInstruction : AbstractBuddyTranslationInstruction, IVariantInstruction {
-        /// <summary> Returns id of the action step. </summary>
-        public override string InstructionId {
-            get { return "Wähle"; }
-        }
+        
+        /// <inheritdoc />
+        public override string InstructionId { get; } = "Wähle";
 
-        /// <summary> Returns the pattern description of the action step. </summary>
-        public override string InstructionPattern {
-            get { return "Wähle {name:value,type:param} <{name:alias,type:alias}>"; }
-        }
+        /// <inheritdoc />
+        public override string InstructionPattern { get; } = "Wähle {name:value,type:param} <{name:alias,type:alias}>";
 
-        /// <summary> Returns the resulting TDIL pattern of the action step. </summary>
-        public override string TdilPattern {
-            get { return "select(~alias, Value, ~value)"; }
-        }
+        /// <inheritdoc />
+        public override string TdilPattern { get; } = "select(~alias, Value, ~value)";
 
         /// <summary> Returns the normalized word sequence for given <paramref name="words"/>. </summary>
         /// <param name="words">Word sequence to normalize</param>
