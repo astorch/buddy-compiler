@@ -3,24 +3,22 @@ using System.Text.RegularExpressions;
 using Bumblebee.buddy.compiler.model.patternparameters.adjustments;
 
 namespace Bumblebee.buddy.compiler.model.functions {
-    /// <summary>
-    /// Implements a registry of TDIL extension functions.
-    /// </summary>
+    /// <summary> Implements a registry of TDIL extension functions. </summary>
     public class TdilExtensionFunctionRegistry {
         /// <summary>
         /// Returns the default instance of this class.
         /// </summary>
         public static readonly TdilExtensionFunctionRegistry Default = new TdilExtensionFunctionRegistry();
 
-        private readonly List<TdilExtensionFunctionInfo> iFunctionTable = new List<TdilExtensionFunctionInfo>(17);
-        private TdilExtensionInvocationFormatter iInvocationFormatter;
+        private readonly List<TdilExtensionFunctionInfo> _functionTable = new List<TdilExtensionFunctionInfo>(17);
+        private TdilExtensionInvocationFormatter _invocationFormatter;
 
         /// <summary>
         /// Adds the given <paramref name="functionInfo"/> to the registry.
         /// </summary>
         /// <param name="functionInfo">Function to add</param>
         public void Add(TdilExtensionFunctionInfo functionInfo) {
-            iFunctionTable.Add(functionInfo);
+            _functionTable.Add(functionInfo);
         }
 
         /// <summary>
@@ -28,45 +26,39 @@ namespace Bumblebee.buddy.compiler.model.functions {
         /// </summary>
         /// <returns>Instance of <see cref="ITdilExtensionFunctionInvocationFormatter"/></returns>
         public ITdilExtensionFunctionInvocationFormatter GetInvocationFormatter() {
-            return iInvocationFormatter ?? (iInvocationFormatter = new TdilExtensionInvocationFormatter(this));
+            return _invocationFormatter ?? (_invocationFormatter = new TdilExtensionInvocationFormatter(this));
         }
 
         /// <summary>
         /// Provides an anonymous implementation of <see cref="ITdilExtensionFunctionInvocationFormatter"/>.
         /// </summary>
         class TdilExtensionInvocationFormatter : ITdilExtensionFunctionInvocationFormatter {
-            private readonly TdilExtensionFunctionRegistry iExtensionFunctionRegistry;
+            private readonly TdilExtensionFunctionRegistry _extensionFunctionRegistry;
 
             /// <summary>
             /// Creates a new instance that utilizes the given <paramref name="extensionFunctionRegistry"/>.
             /// </summary>
             /// <param name="extensionFunctionRegistry">Registry that provides data about available functions</param>
             public TdilExtensionInvocationFormatter(TdilExtensionFunctionRegistry extensionFunctionRegistry) {
-                iExtensionFunctionRegistry = extensionFunctionRegistry;
+                _extensionFunctionRegistry = extensionFunctionRegistry;
             }
 
             /// <inheritdoc />
             public bool ContainsFunctionInvocation(string expression) {
-                TdilExtensionFunctionInfo fInfo;
-                Match match;
-                return IsFunctionInvocation(expression, out match, out fInfo);
+                return IsFunctionInvocation(expression, out _, out _);
             }
 
             /// <inheritdoc />
             public bool TryFormatFunctionInvocation(string expression, out string processedExpression) {
                 processedExpression = expression;
-                TdilExtensionFunctionInfo function;
-                Match match;
-                if (!IsFunctionInvocation(expression, out match, out function)) return false;
+                if (!IsFunctionInvocation(expression, out Match match, out TdilExtensionFunctionInfo function)) return false;
                 processedExpression = AdjustFunctionCall(expression, match, function);
                 return true;
             }
 
             /// <inheritdoc />
             public string FormatFunctionInvocation(string expression) {
-                TdilExtensionFunctionInfo function;
-                Match match;
-                if (!IsFunctionInvocation(expression, out match, out function)) return expression;
+                if (!IsFunctionInvocation(expression, out Match match, out TdilExtensionFunctionInfo function)) return expression;
                 return AdjustFunctionCall(expression, match, function);
             }
 
@@ -80,7 +72,7 @@ namespace Bumblebee.buddy.compiler.model.functions {
             /// <param name="function">Identified function. May be NULL</param>
             /// <returns>TRUE if a function invocation has been found</returns>
             private bool IsFunctionInvocation(string expression, out Match match, out TdilExtensionFunctionInfo function) {
-                List<TdilExtensionFunctionInfo> functionTable = iExtensionFunctionRegistry.iFunctionTable;
+                List<TdilExtensionFunctionInfo> functionTable = _extensionFunctionRegistry._functionTable;
                 
                 function = null;
                 match = null;
