@@ -56,7 +56,7 @@ namespace Bumblebee.buddy.compiler {
             if (string.IsNullOrEmpty(buddyText)) throw new ArgumentNullException(nameof(buddyText));
 
             StopwatchLog compilerStopwatch = StopwatchLog.StartNew(LogCompilerPerformance);
-            TdilFileWriter tdilFileWriter = new TdilFileWriter("0.1.1");
+            TdilFileWriter tdilFileWriter = new TdilFileWriter("0.1.2");
 
             try {
                 // TODO Remove workaround add 'Vorbedingung' 
