@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Bumblebee.buddy.compiler.model.functions;
 using Bumblebee.buddy.compiler.packaging;
 using Bumblebee.buddy.compiler.simplex;
 using NUnit.Framework;
@@ -43,7 +44,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Buddy Compiler version 0.1.2")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"ListboxPinr\"")
@@ -106,7 +107,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Buddy Compiler version 0.1.2")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"ListboxPinr\"")
@@ -163,7 +164,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Buddy Compiler version 0.1.2")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"ListboxPinr\"")
@@ -225,7 +226,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Buddy Compiler version 0.1.2")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"WindowAnmeldung\"")
@@ -297,7 +298,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Buddy Compiler version 0.1.2")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("Unit Verwaltung.s.Anmeldung.Erfolgreiche_Anmeldung")
@@ -357,7 +358,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Buddy Compiler version 0.1.2")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"ButtonAnmelden\"")
@@ -738,7 +739,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Buddy Compiler version 0.1.2")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"Button:Adressen\"")
@@ -842,7 +843,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Buddy Compiler version 0.1.2")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"Button:Adressen\"")
@@ -929,7 +930,7 @@ namespace Bumblebee.buddy.compiler.tests {
             StringBuilder expectedTdilTextBuilder = new StringBuilder();
             expectedTdilTextBuilder
                 .AppendLine("// Compiler generated file")
-                .AppendLine("// Buddy Compiler version 0.1.1")
+                .AppendLine("// Buddy Compiler version 0.1.2")
                 .AppendLine("// Generated on {date}")
                 .AppendLine()
                 .AppendLine("#alias \"Grid:Untersuchungsarten\"")
@@ -951,6 +952,73 @@ namespace Bumblebee.buddy.compiler.tests {
                 .AppendLine("select(Grid:Untersuchungsarten, Value, \"HU gemäß §29\", \"NU/NK\", \"Nachuntersuchung\")")
                 .AppendLine("click(List:AuftraegeEgub, , \"*123*\", \"Mark\", Single)")
                 .AppendLine("click(Toolbar:Main, , \"Neu\", Single)")
+                .AppendLine("End")
+                .AppendLine()
+                .AppendLine("End")
+                .AppendLine();
+
+            string expectedTdilText = expectedTdilTextBuilder.ToString();
+            expectedTdilText = expectedTdilText.Replace("{date}", now.ToString());
+
+            Assert.AreEqual(expectedTdilText, compiledTdilText, "compiledTdilText");
+        }
+
+        [Test]
+        public void Compile_Ok_WithTdilFunction() {
+            // Arrange
+            StringBuilder buddyTextBuilder = new StringBuilder();
+            buddyTextBuilder
+                .AppendLine("Anwendung: Verwaltung")
+                .AppendLine()
+                .AppendLine("Anwendungsfall: Adressen")
+                .AppendLine()
+                .AppendLine("Szenario: TDIL-Function")
+                .AppendLine()
+                .AppendLine("Schritte:")
+                .AppendLine("Setze \"FZKENNZEICHEN(S - %1 %2)\" <TextBox:Passwd> ein.")
+                ;
+
+            string buddyText = buddyTextBuilder.ToString();
+
+            TdilExtensionFunctionRegistry.Default.Add(
+                new TdilExtensionFunctionInfo(
+                    @"FZKENNZEICHEN\((?<x1>[^\)]+)?\)", "uniquefzkenn(\"x1\")",
+                    new[] {
+                        new TdilExtensionFunctionArgumentInfo("x1", "WVWZZZ%1", "format")
+                    }
+                )
+            );
+            
+            // Act
+            BuddyCompiler buddyCompiler = new BuddyCompiler { ImportPathProvider = new _ImportPathProviderImpl() };
+            DateTime now = DateTime.Now;
+            string compiledTdilText = buddyCompiler.Compile(buddyText);
+
+            // Assert
+            Assert.IsNotNull(compiledTdilText);
+            Assert.IsNotEmpty(compiledTdilText);
+            
+            StringBuilder expectedTdilTextBuilder = new StringBuilder();
+            expectedTdilTextBuilder
+                .AppendLine("// Compiler generated file")
+                .AppendLine("// Buddy Compiler version 0.1.2")
+                .AppendLine("// Generated on {date}")
+                .AppendLine()
+                .AppendLine("#alias \"TextBox:Passwd\"")
+                .AppendLine()
+                .AppendLine("Unit Verwaltung.s.Adressen.TDIL-Function")
+                .AppendLine()
+                .AppendLine("Main:")
+                .AppendLine("start(,, \"{Verwaltung}\")")
+                .AppendLine("gosub TDIL-Function:")
+                .AppendLine("close(_Application,, Default)")
+                .AppendLine("kill(_Application,, 3000)")
+                .AppendLine("close(\"AcroRd32\",, Default)")
+                .AppendLine("kill(\"AcroRd32\",, 3000)")
+                .AppendLine("End")
+                .AppendLine()
+                .AppendLine("TDIL-Function:")
+                .AppendLine("set(TextBox:Passwd, Text, uniquefzkenn(\"S - %1 %2\"))")
                 .AppendLine("End")
                 .AppendLine()
                 .AppendLine("End")

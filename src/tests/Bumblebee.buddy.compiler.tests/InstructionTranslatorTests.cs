@@ -37,6 +37,7 @@ namespace Bumblebee.buddy.compiler.tests {
                     yield return new TestCaseData(@"Wähle <Liste:Mitarbeiter> ""Mitarbeiter"" ""Verwaltungskraft"" ""801 - Stefan E."" aus.").Returns(@"select(Liste:Mitarbeiter, Value, ""Mitarbeiter"", ""Verwaltungskraft"", ""801 - Stefan E."")");
                     yield return new TestCaseData(@"Wähle ""Formular"" ""§29"" in <Menu:Main> aus.").Returns(@"select(Menu:Main, Value, ""Formular"", ""§29"")");
 //                    yield return new TestCaseData(@"Klicke <Tabelle:UArten> ""HU29"", ""Wiederholung"" ""Nachprüfung"" doppelt.").Returns(@"click(Tabelle:UArten, , ""HU29"", ""Wiederholung"", ""Nachprüfung"", Double");
+                    yield return new TestCaseData(@"Setze ""FZKENNZEICHEN(S - %1 %2)"" <TextBox:Passwd> ein.").Returns(@"set(TextBox:Passwd, Text, ""FZKENNZEICHEN(S - %1 %2)"")");
                 }
             }
 
