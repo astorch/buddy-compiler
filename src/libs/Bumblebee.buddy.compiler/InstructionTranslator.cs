@@ -13,7 +13,7 @@ namespace Bumblebee.buddy.compiler {
     /// Provides methods to map action line strings to processable action steps which will be converted into TDIL directives.
     /// </summary>
     public class InstructionTranslator {
-        private readonly Dictionary<IBuddyTranslationInstruction, InstructionTranslationInfo> instructionTable = new Dictionary<IBuddyTranslationInstruction, InstructionTranslationInfo>(20);
+        private readonly Dictionary<IBuddyTranslationInstruction, InstructionTranslationInfo> _instructionTable = new Dictionary<IBuddyTranslationInstruction, InstructionTranslationInfo>(20);
 
         private readonly InstructionFormatter _instructionFormatter = new InstructionFormatter();
         private readonly InstructionEvaluator _instructionEvaluator = new InstructionEvaluator();
@@ -40,7 +40,7 @@ namespace Bumblebee.buddy.compiler {
         public void AddTranslationInstruction(IBuddyTranslationInstruction instruction) {
             Assert.NotNull(() => instruction);
             InstructionTranslationInfo instructionInfo = new InstructionTranslationInfo(instruction);
-            instructionTable.Add(instruction, instructionInfo);
+            _instructionTable.Add(instruction, instructionInfo);
         }
 
         /// <summary>
@@ -52,12 +52,12 @@ namespace Bumblebee.buddy.compiler {
         /// <param name="instruction">Action line to process</param>
         /// <returns>Instance of <see cref="IBuddyTranslationInstruction"/> or NULL</returns>
         public IBuddyTranslationInstruction GetTranslationInstruction(string instruction) {
-            if (string.IsNullOrEmpty(instruction)) throw new ArgumentNullException("instruction", "Must not be NULL or empty!");
+            if (string.IsNullOrEmpty(instruction)) throw new ArgumentNullException(nameof(instruction), "Must not be NULL or empty!");
             string[] instructionWords = instruction.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
             string leadingWord = instructionWords.FirstOrDefault();
             if (leadingWord == null) throw new BuddyLanguageFormatException("Given instruction must start with a commanding word!");
 
-            IBuddyTranslationInstruction actionStep = instructionTable.FirstOrDefault(entry => entry.Key.InstructionId == leadingWord).Key;
+            IBuddyTranslationInstruction actionStep = _instructionTable.FirstOrDefault(entry => entry.Key.InstructionId == leadingWord).Key;
             return actionStep;
         }
 
@@ -77,7 +77,7 @@ namespace Bumblebee.buddy.compiler {
                 string processedInstruction = pat.Process(instruction);
 
                 Dictionary<string, IPatternParameter> paramCache = new Dictionary<string, IPatternParameter>();
-                IInstructionEvaluationResult evaRslt = _instructionEvaluator.Evaluate(processedInstruction, instructionTable[translationInstruction], paramCache);
+                IInstructionEvaluationResult evaRslt = _instructionEvaluator.Evaluate(processedInstruction, _instructionTable[translationInstruction], paramCache);
                 if (evaRslt.IsError) {
                     // TODO
                 }
