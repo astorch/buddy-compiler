@@ -53,7 +53,7 @@ namespace Bumblebee.buddy.compiler {
         /// <exception cref="ArgumentNullException">If the given <paramref name="buddyText"/> is NULL or empty</exception>
         /// <exception cref="BuddyCompilerException">If something went wrong during the compilation process</exception>
         public virtual string Compile(string buddyText) {
-            if (string.IsNullOrEmpty(buddyText)) throw new ArgumentNullException("buddyText");
+            if (string.IsNullOrEmpty(buddyText)) throw new ArgumentNullException(nameof(buddyText));
 
             StopwatchLog compilerStopwatch = StopwatchLog.StartNew(LogCompilerPerformance);
             TdilFileWriter tdilFileWriter = new TdilFileWriter("0.1.1");
@@ -127,7 +127,7 @@ namespace Bumblebee.buddy.compiler {
                     // Write unit
                     using (StopwatchLog.StartNew(LogTdilUnitWritingPerformance)) {
                         using (TdilUnitWriter tdilUnitWriter = tdilFileWriter.CreateUnit(qualifiedUnitName)) {
-                            string executeSectionName = string.Format("{0}", unitName.GetEncodedScenarioName());
+                            string executeSectionName = unitName.GetEncodedScenarioName();
                             BuddyTextParameter[] unitParameters = buddyTextInfo.Parameters;
                             string[] parameterNames = new string[unitParameters.Length];
                             for (int l = -1; ++l != parameterNames.Length;)
@@ -148,7 +148,7 @@ namespace Bumblebee.buddy.compiler {
                                 string argInvLine = null;
                                 if (parameterNames.Length != 0) {
                                     string argSetLine = string.Join(", ", parameterNames);
-                                    argInvLine = string.Format("({0})", argSetLine);
+                                    argInvLine = $"({argSetLine})";
                                 }
 
                                 tdilSectionWriter.AppendLine("gosub {0}:{1}", executeSectionName, argInvLine);
@@ -200,9 +200,9 @@ namespace Bumblebee.buddy.compiler {
                 if (c == '/' && i + 1 != ilen && instructionText[i + 1] == '/') {
                     int j = i;
                     int jlen = ilen;
-                    while (++j != jlen && instructionText[j] != '\r')
+                    while (++j != jlen && instructionText[j] != '\r') {
                         // Loop forward
-                        ;
+                    }
 
                     if (j + 1 != ilen && instructionText[j + 1] == '\n')
                         j++;
@@ -307,7 +307,10 @@ namespace Bumblebee.buddy.compiler {
         public virtual string StripPrepositions(string buddyText) {
             // Prepositions to remove
             HashSet<string> prepositions = new HashSet<string>(
-                new[] {"in", "im", "aus", "ein", "ob", "bis", "auf", "zu", "unter"},
+                new[] {
+                    "in", "im", "aus", "ein", "ob", "bis", "auf", "zu", "unter",
+                    "da", "wo"
+                },
                 StringComparer.InvariantCultureIgnoreCase
             );
             
@@ -360,10 +363,12 @@ namespace Bumblebee.buddy.compiler {
             // Substantives to remove
             HashSet<string> substantives = new HashSet<string>(
                 new[] {
-                    "Wert", "Button", "Schaltfläche", "Navigation", "Spalte", "Auswahlbox",
+                    "Wert", "Button", "Schaltfläche", "Navigation", "Spalte", "Auswahlbox", 
+                    "Dokument", "Auftrag", "Bestellung",
                     
                     // GTUE-related -> Remove all upper-case words?
-                    "Kennzeichen"
+                    "Kennzeichen",
+                    "X", "XX", "XXX"
                 },
                 StringComparer.CurrentCultureIgnoreCase
             );
