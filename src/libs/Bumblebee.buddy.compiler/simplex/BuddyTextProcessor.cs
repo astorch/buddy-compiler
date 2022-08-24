@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Bumblebee.buddy.compiler.exceptions;
-using Simplex.grammar;
-using Simplex.lexer;
+using simplex.grammar;
+using simplex.lexer;
 
 namespace Bumblebee.buddy.compiler.simplex {
     /// <summary>
